@@ -1,5 +1,5 @@
 //
-//  GameScene2.swift
+//  GameScene.swift
 //  DeadArrow
 //
 //  Created by Hesedel on 12/26/15.
@@ -8,7 +8,7 @@
 
 import SpriteKit
 
-class GameScene2: SKScene {
+class GameScene: SKScene {
     override func didMoveToView(view: SKView) {
         /* Setup your scene here */
         let myLabel = SKLabelNode(fontNamed:"Chalkduster")
