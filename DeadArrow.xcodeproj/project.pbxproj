@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		370BC4E31C2EDC7500E4F129 /* GameScene2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 370BC4E21C2EDC7500E4F129 /* GameScene2.swift */; };
+		370BC4E51C2EDE1500E4F129 /* GameScene2.sks in Resources */ = {isa = PBXBuildFile; fileRef = 370BC4E41C2EDE1500E4F129 /* GameScene2.sks */; };
 		372D17281C2ED7AC008BD7F3 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 372D17271C2ED7AC008BD7F3 /* AppDelegate.swift */; };
 		372D172A1C2ED7AC008BD7F3 /* GameScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = 372D17291C2ED7AC008BD7F3 /* GameScene.sks */; };
 		372D172C1C2ED7AC008BD7F3 /* GameScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 372D172B1C2ED7AC008BD7F3 /* GameScene.swift */; };
@@ -36,6 +38,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		370BC4E21C2EDC7500E4F129 /* GameScene2.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameScene2.swift; sourceTree = "<group>"; };
+		370BC4E41C2EDE1500E4F129 /* GameScene2.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = GameScene2.sks; sourceTree = "<group>"; };
 		372D17241C2ED7AC008BD7F3 /* DeadArrow.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DeadArrow.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		372D17271C2ED7AC008BD7F3 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		372D17291C2ED7AC008BD7F3 /* GameScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = GameScene.sks; sourceTree = "<group>"; };
@@ -103,7 +107,9 @@
 			children = (
 				372D17271C2ED7AC008BD7F3 /* AppDelegate.swift */,
 				372D17291C2ED7AC008BD7F3 /* GameScene.sks */,
+				370BC4E41C2EDE1500E4F129 /* GameScene2.sks */,
 				372D172B1C2ED7AC008BD7F3 /* GameScene.swift */,
+				370BC4E21C2EDC7500E4F129 /* GameScene2.swift */,
 				372D172D1C2ED7AC008BD7F3 /* GameViewController.swift */,
 				372D172F1C2ED7AC008BD7F3 /* Main.storyboard */,
 				372D17321C2ED7AC008BD7F3 /* Assets.xcassets */,
@@ -237,6 +243,7 @@
 			files = (
 				372D172A1C2ED7AC008BD7F3 /* GameScene.sks in Resources */,
 				372D17361C2ED7AC008BD7F3 /* LaunchScreen.storyboard in Resources */,
+				370BC4E51C2EDE1500E4F129 /* GameScene2.sks in Resources */,
 				372D17331C2ED7AC008BD7F3 /* Assets.xcassets in Resources */,
 				372D17311C2ED7AC008BD7F3 /* Main.storyboard in Resources */,
 			);
@@ -264,6 +271,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				372D172C1C2ED7AC008BD7F3 /* GameScene.swift in Sources */,
+				370BC4E31C2EDC7500E4F129 /* GameScene2.swift in Sources */,
 				372D172E1C2ED7AC008BD7F3 /* GameViewController.swift in Sources */,
 				372D17281C2ED7AC008BD7F3 /* AppDelegate.swift in Sources */,
 			);
@@ -494,6 +502,7 @@
 				372D17521C2ED7AD008BD7F3 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		372D17531C2ED7AD008BD7F3 /* Build configuration list for PBXNativeTarget "DeadArrowTests" */ = {
 			isa = XCConfigurationList;
@@ -502,6 +511,7 @@
 				372D17551C2ED7AD008BD7F3 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		372D17561C2ED7AD008BD7F3 /* Build configuration list for PBXNativeTarget "DeadArrowUITests" */ = {
 			isa = XCConfigurationList;
@@ -510,6 +520,7 @@
 				372D17581C2ED7AD008BD7F3 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
