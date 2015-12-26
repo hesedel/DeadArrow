@@ -1,0 +1,517 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		372D17281C2ED7AC008BD7F3 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 372D17271C2ED7AC008BD7F3 /* AppDelegate.swift */; };
+		372D172A1C2ED7AC008BD7F3 /* GameScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = 372D17291C2ED7AC008BD7F3 /* GameScene.sks */; };
+		372D172C1C2ED7AC008BD7F3 /* GameScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 372D172B1C2ED7AC008BD7F3 /* GameScene.swift */; };
+		372D172E1C2ED7AC008BD7F3 /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 372D172D1C2ED7AC008BD7F3 /* GameViewController.swift */; };
+		372D17311C2ED7AC008BD7F3 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 372D172F1C2ED7AC008BD7F3 /* Main.storyboard */; };
+		372D17331C2ED7AC008BD7F3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 372D17321C2ED7AC008BD7F3 /* Assets.xcassets */; };
+		372D17361C2ED7AC008BD7F3 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 372D17341C2ED7AC008BD7F3 /* LaunchScreen.storyboard */; };
+		372D17411C2ED7AD008BD7F3 /* DeadArrowTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 372D17401C2ED7AD008BD7F3 /* DeadArrowTests.swift */; };
+		372D174C1C2ED7AD008BD7F3 /* DeadArrowUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 372D174B1C2ED7AD008BD7F3 /* DeadArrowUITests.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		372D173D1C2ED7AD008BD7F3 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 372D171C1C2ED7AC008BD7F3 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 372D17231C2ED7AC008BD7F3;
+			remoteInfo = DeadArrow;
+		};
+		372D17481C2ED7AD008BD7F3 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 372D171C1C2ED7AC008BD7F3 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 372D17231C2ED7AC008BD7F3;
+			remoteInfo = DeadArrow;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		372D17241C2ED7AC008BD7F3 /* DeadArrow.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DeadArrow.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		372D17271C2ED7AC008BD7F3 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		372D17291C2ED7AC008BD7F3 /* GameScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = GameScene.sks; sourceTree = "<group>"; };
+		372D172B1C2ED7AC008BD7F3 /* GameScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameScene.swift; sourceTree = "<group>"; };
+		372D172D1C2ED7AC008BD7F3 /* GameViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameViewController.swift; sourceTree = "<group>"; };
+		372D17301C2ED7AC008BD7F3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		372D17321C2ED7AC008BD7F3 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		372D17351C2ED7AC008BD7F3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		372D17371C2ED7AC008BD7F3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		372D173C1C2ED7AD008BD7F3 /* DeadArrowTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DeadArrowTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		372D17401C2ED7AD008BD7F3 /* DeadArrowTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeadArrowTests.swift; sourceTree = "<group>"; };
+		372D17421C2ED7AD008BD7F3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		372D17471C2ED7AD008BD7F3 /* DeadArrowUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DeadArrowUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		372D174B1C2ED7AD008BD7F3 /* DeadArrowUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeadArrowUITests.swift; sourceTree = "<group>"; };
+		372D174D1C2ED7AD008BD7F3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		372D17211C2ED7AC008BD7F3 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		372D17391C2ED7AD008BD7F3 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		372D17441C2ED7AD008BD7F3 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		372D171B1C2ED7AC008BD7F3 = {
+			isa = PBXGroup;
+			children = (
+				372D17261C2ED7AC008BD7F3 /* DeadArrow */,
+				372D173F1C2ED7AD008BD7F3 /* DeadArrowTests */,
+				372D174A1C2ED7AD008BD7F3 /* DeadArrowUITests */,
+				372D17251C2ED7AC008BD7F3 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		372D17251C2ED7AC008BD7F3 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				372D17241C2ED7AC008BD7F3 /* DeadArrow.app */,
+				372D173C1C2ED7AD008BD7F3 /* DeadArrowTests.xctest */,
+				372D17471C2ED7AD008BD7F3 /* DeadArrowUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		372D17261C2ED7AC008BD7F3 /* DeadArrow */ = {
+			isa = PBXGroup;
+			children = (
+				372D17271C2ED7AC008BD7F3 /* AppDelegate.swift */,
+				372D17291C2ED7AC008BD7F3 /* GameScene.sks */,
+				372D172B1C2ED7AC008BD7F3 /* GameScene.swift */,
+				372D172D1C2ED7AC008BD7F3 /* GameViewController.swift */,
+				372D172F1C2ED7AC008BD7F3 /* Main.storyboard */,
+				372D17321C2ED7AC008BD7F3 /* Assets.xcassets */,
+				372D17341C2ED7AC008BD7F3 /* LaunchScreen.storyboard */,
+				372D17371C2ED7AC008BD7F3 /* Info.plist */,
+			);
+			path = DeadArrow;
+			sourceTree = "<group>";
+		};
+		372D173F1C2ED7AD008BD7F3 /* DeadArrowTests */ = {
+			isa = PBXGroup;
+			children = (
+				372D17401C2ED7AD008BD7F3 /* DeadArrowTests.swift */,
+				372D17421C2ED7AD008BD7F3 /* Info.plist */,
+			);
+			path = DeadArrowTests;
+			sourceTree = "<group>";
+		};
+		372D174A1C2ED7AD008BD7F3 /* DeadArrowUITests */ = {
+			isa = PBXGroup;
+			children = (
+				372D174B1C2ED7AD008BD7F3 /* DeadArrowUITests.swift */,
+				372D174D1C2ED7AD008BD7F3 /* Info.plist */,
+			);
+			path = DeadArrowUITests;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		372D17231C2ED7AC008BD7F3 /* DeadArrow */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 372D17501C2ED7AD008BD7F3 /* Build configuration list for PBXNativeTarget "DeadArrow" */;
+			buildPhases = (
+				372D17201C2ED7AC008BD7F3 /* Sources */,
+				372D17211C2ED7AC008BD7F3 /* Frameworks */,
+				372D17221C2ED7AC008BD7F3 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = DeadArrow;
+			productName = DeadArrow;
+			productReference = 372D17241C2ED7AC008BD7F3 /* DeadArrow.app */;
+			productType = "com.apple.product-type.application";
+		};
+		372D173B1C2ED7AD008BD7F3 /* DeadArrowTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 372D17531C2ED7AD008BD7F3 /* Build configuration list for PBXNativeTarget "DeadArrowTests" */;
+			buildPhases = (
+				372D17381C2ED7AD008BD7F3 /* Sources */,
+				372D17391C2ED7AD008BD7F3 /* Frameworks */,
+				372D173A1C2ED7AD008BD7F3 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				372D173E1C2ED7AD008BD7F3 /* PBXTargetDependency */,
+			);
+			name = DeadArrowTests;
+			productName = DeadArrowTests;
+			productReference = 372D173C1C2ED7AD008BD7F3 /* DeadArrowTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		372D17461C2ED7AD008BD7F3 /* DeadArrowUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 372D17561C2ED7AD008BD7F3 /* Build configuration list for PBXNativeTarget "DeadArrowUITests" */;
+			buildPhases = (
+				372D17431C2ED7AD008BD7F3 /* Sources */,
+				372D17441C2ED7AD008BD7F3 /* Frameworks */,
+				372D17451C2ED7AD008BD7F3 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				372D17491C2ED7AD008BD7F3 /* PBXTargetDependency */,
+			);
+			name = DeadArrowUITests;
+			productName = DeadArrowUITests;
+			productReference = 372D17471C2ED7AD008BD7F3 /* DeadArrowUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		372D171C1C2ED7AC008BD7F3 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 0720;
+				LastUpgradeCheck = 0720;
+				ORGANIZATIONNAME = "Pajaron Creative";
+				TargetAttributes = {
+					372D17231C2ED7AC008BD7F3 = {
+						CreatedOnToolsVersion = 7.2;
+					};
+					372D173B1C2ED7AD008BD7F3 = {
+						CreatedOnToolsVersion = 7.2;
+						TestTargetID = 372D17231C2ED7AC008BD7F3;
+					};
+					372D17461C2ED7AD008BD7F3 = {
+						CreatedOnToolsVersion = 7.2;
+						TestTargetID = 372D17231C2ED7AC008BD7F3;
+					};
+				};
+			};
+			buildConfigurationList = 372D171F1C2ED7AC008BD7F3 /* Build configuration list for PBXProject "DeadArrow" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 372D171B1C2ED7AC008BD7F3;
+			productRefGroup = 372D17251C2ED7AC008BD7F3 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				372D17231C2ED7AC008BD7F3 /* DeadArrow */,
+				372D173B1C2ED7AD008BD7F3 /* DeadArrowTests */,
+				372D17461C2ED7AD008BD7F3 /* DeadArrowUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		372D17221C2ED7AC008BD7F3 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				372D172A1C2ED7AC008BD7F3 /* GameScene.sks in Resources */,
+				372D17361C2ED7AC008BD7F3 /* LaunchScreen.storyboard in Resources */,
+				372D17331C2ED7AC008BD7F3 /* Assets.xcassets in Resources */,
+				372D17311C2ED7AC008BD7F3 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		372D173A1C2ED7AD008BD7F3 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		372D17451C2ED7AD008BD7F3 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		372D17201C2ED7AC008BD7F3 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				372D172C1C2ED7AC008BD7F3 /* GameScene.swift in Sources */,
+				372D172E1C2ED7AC008BD7F3 /* GameViewController.swift in Sources */,
+				372D17281C2ED7AC008BD7F3 /* AppDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		372D17381C2ED7AD008BD7F3 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				372D17411C2ED7AD008BD7F3 /* DeadArrowTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		372D17431C2ED7AD008BD7F3 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				372D174C1C2ED7AD008BD7F3 /* DeadArrowUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		372D173E1C2ED7AD008BD7F3 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 372D17231C2ED7AC008BD7F3 /* DeadArrow */;
+			targetProxy = 372D173D1C2ED7AD008BD7F3 /* PBXContainerItemProxy */;
+		};
+		372D17491C2ED7AD008BD7F3 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 372D17231C2ED7AC008BD7F3 /* DeadArrow */;
+			targetProxy = 372D17481C2ED7AD008BD7F3 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		372D172F1C2ED7AC008BD7F3 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				372D17301C2ED7AC008BD7F3 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		372D17341C2ED7AC008BD7F3 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				372D17351C2ED7AC008BD7F3 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		372D174E1C2ED7AD008BD7F3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		372D174F1C2ED7AD008BD7F3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		372D17511C2ED7AD008BD7F3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_FILE = DeadArrow/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.pajaroncreative.DeadArrow;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		372D17521C2ED7AD008BD7F3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_FILE = DeadArrow/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.pajaroncreative.DeadArrow;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		372D17541C2ED7AD008BD7F3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				INFOPLIST_FILE = DeadArrowTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.pajaroncreative.DeadArrowTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/DeadArrow.app/DeadArrow";
+			};
+			name = Debug;
+		};
+		372D17551C2ED7AD008BD7F3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				INFOPLIST_FILE = DeadArrowTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.pajaroncreative.DeadArrowTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/DeadArrow.app/DeadArrow";
+			};
+			name = Release;
+		};
+		372D17571C2ED7AD008BD7F3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				INFOPLIST_FILE = DeadArrowUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.pajaroncreative.DeadArrowUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_TARGET_NAME = DeadArrow;
+				USES_XCTRUNNER = YES;
+			};
+			name = Debug;
+		};
+		372D17581C2ED7AD008BD7F3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				INFOPLIST_FILE = DeadArrowUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.pajaroncreative.DeadArrowUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_TARGET_NAME = DeadArrow;
+				USES_XCTRUNNER = YES;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		372D171F1C2ED7AC008BD7F3 /* Build configuration list for PBXProject "DeadArrow" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				372D174E1C2ED7AD008BD7F3 /* Debug */,
+				372D174F1C2ED7AD008BD7F3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		372D17501C2ED7AD008BD7F3 /* Build configuration list for PBXNativeTarget "DeadArrow" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				372D17511C2ED7AD008BD7F3 /* Debug */,
+				372D17521C2ED7AD008BD7F3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		372D17531C2ED7AD008BD7F3 /* Build configuration list for PBXNativeTarget "DeadArrowTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				372D17541C2ED7AD008BD7F3 /* Debug */,
+				372D17551C2ED7AD008BD7F3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		372D17561C2ED7AD008BD7F3 /* Build configuration list for PBXNativeTarget "DeadArrowUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				372D17571C2ED7AD008BD7F3 /* Debug */,
+				372D17581C2ED7AD008BD7F3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 372D171C1C2ED7AC008BD7F3 /* Project object */;
+}
