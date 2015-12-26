@@ -1,0 +1,85 @@
+//
+//  Bow.swift
+//  DeadArrow
+//
+//  Created by Hesedel on 12/26/15.
+//  Copyright © 2015 Pajaron Creative. All rights reserved.
+//
+
+import SpriteKit
+
+class Bow:SKShapeNode {
+    var baseUnit:CGFloat = 0.0
+    var width:CGFloat = 0.0
+    var width_2:CGFloat = 0.0
+    var height:CGFloat = 0.0
+    var reusablePath = CGPathCreateMutable()
+    var bow = SKShapeNode()
+    var string = SKShapeNode()
+    var anchor = SKShapeNode()
+    var left = SKShapeNode()
+    var right = SKShapeNode()
+    
+    override init() {
+        super.init()
+    }
+    
+    convenience init(baseUnit:CGFloat) {
+        self.init()
+        
+        self.baseUnit = baseUnit
+        
+        self.lineWidth = self.baseUnit / 15
+        self.width = self.baseUnit * 2
+        self.width_2 = self.baseUnit
+        self.height = self.baseUnit / 3
+        
+        self.anchor = SKShapeNode(circleOfRadius:self.lineWidth)
+        self.left = SKShapeNode(circleOfRadius:self.lineWidth)
+        self.right = SKShapeNode(circleOfRadius:self.lineWidth)
+        
+        self.left.position = CGPoint(x:-self.width_2, y:-self.height)
+        self.right.position = CGPoint(x:self.width_2, y:-self.height)
+        
+        self.bow.lineWidth = self.lineWidth
+        self.bow.strokeColor = UIColor.blackColor()
+        self.string.strokeColor = UIColor.blackColor()
+        self.anchor.fillColor = UIColor.redColor()
+        self.anchor.strokeColor = UIColor.blackColor()
+        self.left.fillColor = UIColor.redColor()
+        self.left.strokeColor = UIColor.blackColor()
+        self.right.fillColor = UIColor.blueColor()
+        self.right.strokeColor = UIColor.blackColor()
+        
+        self.drawBow()
+        
+        self.addChild(self.bow)
+        self.addChild(self.string)
+        self.addChild(self.anchor)
+        self.addChild(self.left)
+        self.addChild(self.right)
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    func drawBow(var drawDistance:CGFloat = 0.0) {
+        drawDistance = [0, drawDistance - self.height].maxElement()!
+        let drawDistance_4 = drawDistance / 4
+        let newWidth_2 = self.width_2 - drawDistance_4
+        let newHeight = self.height + drawDistance_4
+        
+        self.reusablePath = CGPathCreateMutable()
+        CGPathMoveToPoint(self.reusablePath, nil, -newWidth_2, -newHeight)
+        CGPathAddCurveToPoint(self.reusablePath, nil, -newWidth_2, -newHeight, -newWidth_2, 0.0, 0.0, 0.0)
+        CGPathAddCurveToPoint(self.reusablePath, nil, newWidth_2, 0.0, newWidth_2, -newHeight, newWidth_2, -newHeight)
+        self.bow.path = self.reusablePath
+        
+        self.reusablePath = CGPathCreateMutable()
+        CGPathMoveToPoint(self.reusablePath, nil, -newWidth_2, -newHeight)
+        CGPathAddLineToPoint(self.reusablePath, nil, 0.0, -(self.height + drawDistance))
+        CGPathAddLineToPoint(self.reusablePath, nil, newWidth_2, -newHeight)
+        self.string.path = self.reusablePath
+    }
+}

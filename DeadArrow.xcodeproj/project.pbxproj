@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		370BC4E31C2EDC7500E4F129 /* GameScene2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 370BC4E21C2EDC7500E4F129 /* GameScene2.swift */; };
 		370BC4E51C2EDE1500E4F129 /* GameScene2.sks in Resources */ = {isa = PBXBuildFile; fileRef = 370BC4E41C2EDE1500E4F129 /* GameScene2.sks */; };
+		370BC4E71C2F3C3B00E4F129 /* Bow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 370BC4E61C2F3C3B00E4F129 /* Bow.swift */; };
 		372D17281C2ED7AC008BD7F3 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 372D17271C2ED7AC008BD7F3 /* AppDelegate.swift */; };
 		372D172A1C2ED7AC008BD7F3 /* GameScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = 372D17291C2ED7AC008BD7F3 /* GameScene.sks */; };
 		372D172C1C2ED7AC008BD7F3 /* GameScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 372D172B1C2ED7AC008BD7F3 /* GameScene.swift */; };
@@ -40,6 +41,7 @@
 /* Begin PBXFileReference section */
 		370BC4E21C2EDC7500E4F129 /* GameScene2.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameScene2.swift; sourceTree = "<group>"; };
 		370BC4E41C2EDE1500E4F129 /* GameScene2.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = GameScene2.sks; sourceTree = "<group>"; };
+		370BC4E61C2F3C3B00E4F129 /* Bow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Bow.swift; sourceTree = "<group>"; };
 		372D17241C2ED7AC008BD7F3 /* DeadArrow.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DeadArrow.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		372D17271C2ED7AC008BD7F3 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		372D17291C2ED7AC008BD7F3 /* GameScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = GameScene.sks; sourceTree = "<group>"; };
@@ -115,6 +117,7 @@
 				372D17321C2ED7AC008BD7F3 /* Assets.xcassets */,
 				372D17341C2ED7AC008BD7F3 /* LaunchScreen.storyboard */,
 				372D17371C2ED7AC008BD7F3 /* Info.plist */,
+				370BC4E61C2F3C3B00E4F129 /* Bow.swift */,
 			);
 			path = DeadArrow;
 			sourceTree = "<group>";
@@ -274,6 +277,7 @@
 				370BC4E31C2EDC7500E4F129 /* GameScene2.swift in Sources */,
 				372D172E1C2ED7AC008BD7F3 /* GameViewController.swift in Sources */,
 				372D17281C2ED7AC008BD7F3 /* AppDelegate.swift in Sources */,
+				370BC4E71C2F3C3B00E4F129 /* Bow.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
