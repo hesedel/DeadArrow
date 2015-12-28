@@ -14,6 +14,7 @@ class Bow:SKShapeNode {
     var width_2:CGFloat = 0.0
     var height:CGFloat = 0.0
     var maxDrawDistance:CGFloat = 0.0
+    var drawDistance:CGFloat = 0.0
     var reusablePath = CGPathCreateMutable()
     var bow = SKShapeNode()
     var string = SKShapeNode()
@@ -31,7 +32,7 @@ class Bow:SKShapeNode {
         
         self.baseUnit = baseUnit
         
-        self.lineWidth = self.baseUnit / 15
+        self.lineWidth = self.baseUnit / 16
         self.width = self.baseUnit * 2
         self.width_2 = self.baseUnit
         self.height = self.baseUnit / 3
@@ -74,10 +75,10 @@ class Bow:SKShapeNode {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func drawBow(var drawDistance:CGFloat = 0.0) {
-        drawDistance = [0.0, drawDistance - self.height].maxElement()!
-        drawDistance = [self.maxDrawDistance, drawDistance].minElement()!
-        let drawDistance_4 = drawDistance / 4
+    func drawBow(drawDistance:CGFloat = 0.0) {
+        self.drawDistance = [0.0, drawDistance - self.height].maxElement()!
+        self.drawDistance = [self.maxDrawDistance, self.drawDistance].minElement()!
+        let drawDistance_4 = self.drawDistance / 4
         let newWidth_2 = self.width_2 - drawDistance_4
         let newHeight = self.height + drawDistance_4
         
@@ -87,12 +88,12 @@ class Bow:SKShapeNode {
         CGPathAddCurveToPoint(self.reusablePath, nil, newWidth_2, 0.0, newWidth_2, -newHeight, newWidth_2, -newHeight)
         self.bow.path = self.reusablePath
         
-        self.arrow.hidden = drawDistance == 0.0
-        self.arrow.position.y = -drawDistance
+        self.arrow.hidden = self.drawDistance == 0.0
+        self.arrow.position.y = -self.drawDistance
         
         self.reusablePath = CGPathCreateMutable()
         CGPathMoveToPoint(self.reusablePath, nil, -newWidth_2, -newHeight)
-        CGPathAddLineToPoint(self.reusablePath, nil, 0.0, -(self.height + drawDistance))
+        CGPathAddLineToPoint(self.reusablePath, nil, 0.0, -(self.height + self.drawDistance))
         CGPathAddLineToPoint(self.reusablePath, nil, newWidth_2, -newHeight)
         self.string.path = self.reusablePath
     }
