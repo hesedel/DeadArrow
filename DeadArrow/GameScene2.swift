@@ -13,8 +13,8 @@ class GameScene2: SKScene {
     var reusablePath = CGPathCreateMutable()
     var bow = Bow()
     var bowDrawingZone = SKShapeNode()
-    var bowDrawingZoneYBottom:CGFloat = 0.0
     var fingerHasCrossedBowDrawingZone = false
+    let arrowSpeed = 0.125
     var arrows = [SKShapeNode]()
     
     override func didMoveToView(view: SKView) {
@@ -27,14 +27,12 @@ class GameScene2: SKScene {
         self.baseUnit = CGRectGetMaxX(self.frame) / 12
         
         self.bow = Bow(baseUnit: self.baseUnit)
-        self.bowDrawingZone = SKShapeNode(rectOfSize:CGSize(width:self.bow.width, height:self.bow.height))
+        self.bowDrawingZone = SKShapeNode(rect:CGRect(origin:CGPoint(x:-self.bow.width_2, y:-self.bow.height), size:CGSize(width:self.bow.width, height:self.bow.height)))
         
         self.bowDrawingZone.userInteractionEnabled = true
         
         self.bow.position = CGPoint(x:CGRectGetMidX(self.frame), y:(CGRectGetMidY(self.frame) / 2))
-        self.bowDrawingZone.position = CGPoint(x:self.bow.position.x, y:(self.bow.position.y - (self.bow.height / 2)))
-        
-        self.bowDrawingZoneYBottom = CGRectGetMinY(self.bowDrawingZone.frame)
+        self.bowDrawingZone.position = self.bow.position
         
         self.bowDrawingZone.fillColor = UIColor.magentaColor()
         self.bowDrawingZone.lineWidth = 0.0
@@ -72,15 +70,21 @@ class GameScene2: SKScene {
                 self.fingerHasCrossedBowDrawingZone = true;
             }
             
-            if (!self.fingerHasCrossedBowDrawingZone || location.y >= self.bowDrawingZoneYBottom) {
+            if (!self.fingerHasCrossedBowDrawingZone || location.y >= self.bow.position.y) {
                 return
             }
-            
-            self.bow.zRotation = atan2(location.y - self.bow.position.y, location.x - self.bow.position.x) + CGFloat(M_PI_2)
             
             let drawDistanceX = self.bow.position.x - location.x
             let drawDistanceY = self.bow.position.y - location.y
             let drawDistance = sqrt((drawDistanceX * drawDistanceX) + (drawDistanceY * drawDistanceY))
+            
+            if (drawDistance <= self.bow.height) {
+                self.bow.drawBow()
+                
+                return
+            }
+            
+            self.bow.zRotation = atan2(location.y - self.bow.position.y, location.x - self.bow.position.x) + CGFloat(M_PI_2)
             
             self.bow.drawBow(drawDistance)
         }
@@ -92,10 +96,9 @@ class GameScene2: SKScene {
                 return
             }
             
-            let location = touch.locationInNode(self)
-            
             self.bow.drawBow()
         
+            let location = touch.locationInNode(self)
             let distanceX = self.bow.position.x - location.x
             let distanceY = self.bow.position.y - location.y
         
@@ -105,11 +108,13 @@ class GameScene2: SKScene {
             arrow.zRotation = self.bow.zRotation
             arrow.strokeColor = UIColor.blackColor()
             
-            let action = SKAction.moveBy(CGVector(dx:distanceX, dy:distanceY), duration:0.125)
+            let action = SKAction.moveBy(CGVector(dx:distanceX, dy:distanceY), duration:self.arrowSpeed)
             arrow.runAction(SKAction.repeatActionForever(action))
             
             self.arrows.append(arrow)
             self.addChild(arrow)
+            
+            self.bowDrawingZone.zRotation = self.bow.zRotation
             
             self.fingerHasCrossedBowDrawingZone = false;
         }
