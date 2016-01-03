@@ -8,16 +8,22 @@
 
 import SpriteKit
 
-class GameScene2: SKScene {
+class GameScene2: SKScene, SKPhysicsContactDelegate {
     var width:CGFloat = 0.0
     var baseUnit:CGFloat = 0.0
     var reusablePath = CGPathCreateMutable()
+    enum Categories:UInt32 {
+        case none = 0b000
+        case field = 0b001
+        case arrow = 0b010
+        case monster = 0b100
+        case all = 0b111
+    }
     var field = SKShapeNode()
     var bow = Bow()
     var bowDrawingZone = SKShapeNode()
     var fingerHasCrossedBowDrawingZone = false
     let arrowSpeed = 0.025
-    var arrows = [SKShapeNode]()
     
     override func didMoveToView(view: SKView) {
         /* Setup your scene here */
@@ -27,7 +33,9 @@ class GameScene2: SKScene {
         //myLabel.position = CGPoint(x:CGRectGetMidX(self.frame), y:CGRectGetMidY(self.frame))
         
         self.width = self.view!.bounds.width
-        self.baseUnit = self.width / 8
+        self.baseUnit = self.width / 7
+        
+        self.physicsWorld.contactDelegate = self
         
         self.field = SKShapeNode(rect:CGRect(origin:CGPoint(x:-(self.width / 2), y:0.0), size:CGSize(width:self.width, height:self.width)))
         self.bow = Bow(baseUnit: self.baseUnit)
@@ -44,10 +52,17 @@ class GameScene2: SKScene {
         self.bowDrawingZone.fillColor = UIColor.magentaColor()
         self.bowDrawingZone.lineWidth = 0.0
         
+        self.field.physicsBody = SKPhysicsBody(polygonFromPath:self.field.path!)
+        self.field.physicsBody!.affectedByGravity = false
+        self.field.physicsBody!.categoryBitMask = Categories.field.rawValue
+        self.field.physicsBody!.collisionBitMask = Categories.none.rawValue
+        
         //self.addChild(myLabel)
         self.addChild(self.field)
         self.addChild(self.bowDrawingZone)
         self.addChild(self.bow)
+        
+        NSTimer.scheduledTimerWithTimeInterval(3.0, target:self, selector:"addMonster", userInfo:nil, repeats:true)
     }
     
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
@@ -75,7 +90,7 @@ class GameScene2: SKScene {
             let location = touch.locationInNode(self)
             
             if (!self.fingerHasCrossedBowDrawingZone && CGRectContainsPoint(self.bowDrawingZone.frame, location)) {
-                self.fingerHasCrossedBowDrawingZone = true;
+                self.fingerHasCrossedBowDrawingZone = true
             }
             
             if (!self.fingerHasCrossedBowDrawingZone) {
@@ -117,23 +132,74 @@ class GameScene2: SKScene {
             arrow.position = self.bow.position
             arrow.zRotation = self.bow.zRotation
             arrow.strokeColor = UIColor.blackColor()
+            arrow.physicsBody = SKPhysicsBody(edgeChainFromPath:arrow.path!)
+            arrow.physicsBody!.affectedByGravity = false
+            arrow.physicsBody!.categoryBitMask = Categories.arrow.rawValue
+            arrow.physicsBody!.collisionBitMask = Categories.none.rawValue
+            arrow.physicsBody!.contactTestBitMask = Categories.field.rawValue | Categories.monster.rawValue
             
             let rotation = arrow.zRotation + CGFloat(M_PI_2)
             let action = SKAction.moveBy(CGVector(dx:(self.bow.drawDistance * cos(rotation)), dy:(self.bow.drawDistance * sin(rotation))), duration:self.arrowSpeed)
             arrow.runAction(SKAction.repeatActionForever(action))
             
-            self.arrows.append(arrow)
             self.addChild(arrow)
             
             self.bow.drawBow()
             
             self.bowDrawingZone.zRotation = self.bow.zRotation
             
-            self.fingerHasCrossedBowDrawingZone = false;
+            self.fingerHasCrossedBowDrawingZone = false
         }
     }
    
     override func update(currentTime: CFTimeInterval) {
         /* Called before each frame is rendered */
+    }
+    
+    func didBeginContact(contact: SKPhysicsContact) {
+        let nodeA = contact.bodyA.node as! SKShapeNode
+        let nodeB = contact.bodyB.node as! SKShapeNode
+        
+        if (nodeA.physicsBody!.categoryBitMask == Categories.arrow.rawValue && nodeB.physicsBody!.categoryBitMask == Categories.monster.rawValue) {
+            nodeA.physicsBody!.categoryBitMask = Categories.none.rawValue
+            nodeA.removeAllActions()
+            nodeB.fillColor = UIColor.blackColor()
+            nodeB.physicsBody!.categoryBitMask = Categories.none.rawValue
+            nodeB.removeAllActions()
+            
+            let arr = [nodeA, nodeB]
+            NSTimer.scheduledTimerWithTimeInterval(3.0, target:self, selector:"removeTheDead:", userInfo:arr, repeats:true)
+        }
+    }
+    
+    func didEndContact(contact: SKPhysicsContact) {
+        let nodeA = contact.bodyA.node as! SKShapeNode
+        let nodeB = contact.bodyB.node as! SKShapeNode
+        
+        if (nodeA.physicsBody!.categoryBitMask == Categories.arrow.rawValue && nodeB.physicsBody!.categoryBitMask == Categories.field.rawValue) {
+            nodeA.removeAllActions()
+            nodeA.removeFromParent()
+        }
+    }
+    
+    func addMonster() {
+        let monster = SKShapeNode(circleOfRadius:(self.baseUnit / 4))
+        monster.position = CGPoint(x:CGFloat(arc4random_uniform(UInt32(self.width))), y:CGRectGetMaxY(self.field.frame))
+        monster.fillColor = UIColor.redColor()
+        monster.strokeColor = UIColor.blackColor()
+        monster.physicsBody = SKPhysicsBody(circleOfRadius:(self.baseUnit / 5))
+        monster.physicsBody!.affectedByGravity = false
+        monster.physicsBody!.categoryBitMask = Categories.monster.rawValue
+        monster.physicsBody!.collisionBitMask = Categories.none.rawValue
+        
+        let action = SKAction.moveBy(CGVector(dx:0.0, dy:-(self.baseUnit / 2)), duration:1.0)
+        monster.runAction(SKAction.repeatActionForever(action))
+        
+        self.addChild(monster)
+    }
+    
+    func removeTheDead(timer: NSTimer) {
+        timer.userInfo![0].removeFromParent()
+        timer.userInfo![1].removeFromParent()
     }
 }
