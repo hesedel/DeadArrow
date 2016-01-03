@@ -25,6 +25,9 @@ class GameScene2: SKScene, SKPhysicsContactDelegate {
     var fingerHasCrossedBowDrawingZone = false
     let arrowSpeed = 0.025
     
+    var hasGameStarted = false
+    var monsterSpawnTimer = NSTimer()
+    
     override func didMoveToView(view: SKView) {
         /* Setup your scene here */
         //let myLabel = SKLabelNode(fontNamed:"Chalkduster")
@@ -49,7 +52,6 @@ class GameScene2: SKScene, SKPhysicsContactDelegate {
         
         self.field.fillColor = UIColor.cyanColor()
         self.field.lineWidth = 0.0
-        self.bowDrawingZone.fillColor = UIColor.magentaColor()
         self.bowDrawingZone.lineWidth = 0.0
         
         self.field.physicsBody = SKPhysicsBody(polygonFromPath:self.field.path!)
@@ -61,8 +63,6 @@ class GameScene2: SKScene, SKPhysicsContactDelegate {
         self.addChild(self.field)
         self.addChild(self.bowDrawingZone)
         self.addChild(self.bow)
-        
-        NSTimer.scheduledTimerWithTimeInterval(3.0, target:self, selector:"addMonster", userInfo:nil, repeats:true)
     }
     
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
@@ -118,6 +118,8 @@ class GameScene2: SKScene, SKPhysicsContactDelegate {
             self.bow.zRotation = atan2(location.y - self.bow.position.y, location.x - self.bow.position.x) + CGFloat(M_PI_2)
             
             self.bow.drawBow(drawDistance)
+            
+            self.startGame()
         }
     }
     
@@ -179,23 +181,62 @@ class GameScene2: SKScene, SKPhysicsContactDelegate {
         if (nodeA.physicsBody!.categoryBitMask == Categories.arrow.rawValue && nodeB.physicsBody!.categoryBitMask == Categories.field.rawValue) {
             nodeA.removeAllActions()
             nodeA.removeFromParent()
+            
+            return
+        }
+        
+        if (nodeA.physicsBody!.categoryBitMask == Categories.field.rawValue && nodeB.physicsBody!.categoryBitMask == Categories.monster.rawValue) {
+            self.endGame()
         }
     }
     
-    func addMonster() {
-        let monster = SKShapeNode(circleOfRadius:(self.baseUnit / 4))
-        monster.position = CGPoint(x:CGFloat(arc4random_uniform(UInt32(self.width))), y:CGRectGetMaxY(self.field.frame))
+    // MARK: Game Event Functions
+    
+    func startGame() {
+        if (self.hasGameStarted) {
+            return
+        }
+        
+        self.enumerateChildNodesWithName("monster", usingBlock:{
+            (node, _) in
+            node.removeFromParent()
+        })
+        
+        self.spawnMonster()
+        
+        self.hasGameStarted = true
+    }
+    
+    func endGame() {
+        self.monsterSpawnTimer.invalidate()
+        
+        self.enumerateChildNodesWithName("monster", usingBlock:{
+            (node, _) in
+            node.removeAllActions()
+        })
+        
+        self.hasGameStarted = false
+    }
+    
+    func spawnMonster() {
+        let radius = self.baseUnit / 3
+        let monster = Monster(circleOfRadius:radius)
+        monster.name = "monster"
+        monster.position = CGPoint(x:(radius + CGFloat(arc4random_uniform(UInt32(self.width - (radius * 2))))), y:(CGRectGetMaxY(self.field.frame) + radius))
         monster.fillColor = UIColor.redColor()
         monster.strokeColor = UIColor.blackColor()
-        monster.physicsBody = SKPhysicsBody(circleOfRadius:(self.baseUnit / 5))
+        monster.physicsBody = SKPhysicsBody(circleOfRadius:(self.baseUnit / 4))
         monster.physicsBody!.affectedByGravity = false
         monster.physicsBody!.categoryBitMask = Categories.monster.rawValue
         monster.physicsBody!.collisionBitMask = Categories.none.rawValue
+        monster.physicsBody!.contactTestBitMask = Categories.field.rawValue
         
         let action = SKAction.moveBy(CGVector(dx:0.0, dy:-(self.baseUnit / 2)), duration:1.0)
         monster.runAction(SKAction.repeatActionForever(action))
         
         self.addChild(monster)
+        
+        self.monsterSpawnTimer = NSTimer.scheduledTimerWithTimeInterval(3.0, target:self, selector:"spawnMonster", userInfo:nil, repeats:false)
     }
     
     func removeTheDead(timer: NSTimer) {

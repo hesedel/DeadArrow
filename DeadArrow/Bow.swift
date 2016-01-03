@@ -54,11 +54,8 @@ class Bow:SKShapeNode {
         self.bow.strokeColor = UIColor.blackColor()
         self.arrow.strokeColor = UIColor.blackColor()
         self.string.strokeColor = UIColor.blackColor()
-        self.anchor.fillColor = UIColor.redColor()
         self.anchor.strokeColor = UIColor.blackColor()
-        self.left.fillColor = UIColor.redColor()
         self.left.strokeColor = UIColor.blackColor()
-        self.right.fillColor = UIColor.blueColor()
         self.right.strokeColor = UIColor.blackColor()
         
         self.drawBow()
@@ -66,9 +63,9 @@ class Bow:SKShapeNode {
         self.addChild(self.string)
         self.addChild(self.bow)
         self.addChild(self.arrow)
-        self.addChild(self.anchor)
-        self.addChild(self.left)
-        self.addChild(self.right)
+        //self.addChild(self.anchor)
+        //self.addChild(self.left)
+        //self.addChild(self.right)
     }
     
     required init?(coder aDecoder: NSCoder) {
