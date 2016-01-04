@@ -12,7 +12,7 @@ class Monster:SKShapeNode {
     var baseUnit:CGFloat = 0.0
     var radius:CGFloat = 0.0
     
-    let movementSpeed = 1.0
+    var movementSpeed = 1.0
     var lifeMax = 0.0
     var life = 0.0
     
@@ -20,12 +20,14 @@ class Monster:SKShapeNode {
         super.init()
     }
     
-    convenience init(baseUnit: CGFloat) {
+    convenience init(baseUnit: CGFloat, randomizeRadiusAndMovementSpeed: Bool = false) {
         self.init()
         
         self.baseUnit = baseUnit
         self.radius = self.baseUnit / 3
-        self.randomizeRadius()
+        if (randomizeRadiusAndMovementSpeed) {
+            self.randomizeRadius()
+        }
         
         self.path = SKShapeNode(circleOfRadius:self.radius).path
         
@@ -35,6 +37,9 @@ class Monster:SKShapeNode {
         self.physicsBody = SKPhysicsBody(circleOfRadius:(self.radius * (2 / 3)))
         self.physicsBody!.affectedByGravity = false
         
+        if (randomizeRadiusAndMovementSpeed) {
+            self.randomizeMovementSpeed()
+        }
         self.addMovement()
     }
     
@@ -45,13 +50,19 @@ class Monster:SKShapeNode {
     func randomizeRadius() {
         let randomNumber = CGFloat(arc4random_uniform(UInt32(101))) / 100
         let radiusRandomizer = (self.radius / 8) - ((self.radius / 4) * randomNumber)
+        
         self.radius = self.radius + radiusRandomizer
     }
     
-    func addMovement() {
+    func randomizeMovementSpeed() {
         let randomNumber = Double(arc4random_uniform(UInt32(101))) / 100
         let speedRandomizer = (1.0 / 4) - ((1.0 / 2) * randomNumber)
-        let action = SKAction.moveBy(CGVector(dx:0.0, dy:-(self.radius * 2)), duration:(self.movementSpeed + speedRandomizer))
+        
+        self.movementSpeed = self.movementSpeed + speedRandomizer
+    }
+    
+    func addMovement() {
+        let action = SKAction.moveBy(CGVector(dx:0.0, dy:-(self.radius * 2)), duration:self.movementSpeed)
         
         self.runAction(SKAction.repeatActionForever(action))
     }

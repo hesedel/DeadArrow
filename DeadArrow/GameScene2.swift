@@ -28,10 +28,13 @@ class GameScene2: SKScene, SKPhysicsContactDelegate {
     var fingerHasCrossedBowDrawingZone = false
     let arrowSpeed = 1.0 / 32
     
-    var hasGameStarted = false
     let monsterSpawnDelay = 3.0
     var monsterSpawnTimer = NSTimer()
     let timeUntilBodiesVanish = 3.0
+    
+    var hasGameStarted = false
+    var monsterSpawnCount = 0
+    var killCount = 0
     
     override func didMoveToView(view: SKView) {
         /* Setup your scene here */
@@ -55,7 +58,7 @@ class GameScene2: SKScene, SKPhysicsContactDelegate {
         self.bow.position = self.field.position
         self.bowDrawingZone.position = self.bow.position
         
-        self.field.fillColor = UIColor.cyanColor()
+        self.field.fillColor = UIColor.whiteColor()
         self.field.lineWidth = 0.0
         self.bowDrawingZone.lineWidth = 0.0
         
@@ -174,6 +177,8 @@ class GameScene2: SKScene, SKPhysicsContactDelegate {
             nodeB.physicsBody!.categoryBitMask = Categories.none.rawValue
             nodeB.removeAllActions()
             
+            self.killCount += 1
+            
             NSTimer.scheduledTimerWithTimeInterval(self.timeUntilBodiesVanish, target:self, selector:"vanishBodies:", userInfo:[nodeA, nodeB], repeats:false)
         }
     }
@@ -201,6 +206,9 @@ class GameScene2: SKScene, SKPhysicsContactDelegate {
             return
         }
         
+        self.monsterSpawnCount = 0
+        self.killCount = 0
+        
         self.enumerateChildNodesWithName("monster", usingBlock:{
             (node, stop) in
             node.removeFromParent()
@@ -223,7 +231,7 @@ class GameScene2: SKScene, SKPhysicsContactDelegate {
     }
     
     func spawnMonster(timer: NSTimer = NSTimer()) {
-        let monster = Monster(baseUnit:self.baseUnit)
+        let monster = Monster(baseUnit:self.baseUnit, randomizeRadiusAndMovementSpeed:(self.monsterSpawnCount >= 16))
         
         monster.name = "monster"
         
@@ -234,6 +242,8 @@ class GameScene2: SKScene, SKPhysicsContactDelegate {
         monster.physicsBody!.contactTestBitMask = Categories.field.rawValue
         
         self.addChild(monster)
+        
+        self.monsterSpawnCount += 1
         
         let spawnDelayOffset = timer.userInfo != nil ? timer.userInfo as! Double : 0.0
         let randomNumber = Double(arc4random_uniform(UInt32(101))) / 100
