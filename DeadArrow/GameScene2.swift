@@ -26,11 +26,12 @@ class GameScene2: SKScene, SKPhysicsContactDelegate {
     var bow = Bow()
     var bowDrawingZone = SKShapeNode()
     var fingerHasCrossedBowDrawingZone = false
-    let arrowSpeed = 0.025
+    let arrowSpeed = 1.0 / 32
     
     var hasGameStarted = false
     let monsterSpawnDelay = 3.0
     var monsterSpawnTimer = NSTimer()
+    let monsterSpeed = 1.0
     let timeUntilBodiesVanish = 3.0
     
     override func didMoveToView(view: SKView) {
@@ -235,13 +236,15 @@ class GameScene2: SKScene, SKPhysicsContactDelegate {
         monster.physicsBody!.collisionBitMask = Categories.none.rawValue
         monster.physicsBody!.contactTestBitMask = Categories.field.rawValue
         
-        let action = SKAction.moveBy(CGVector(dx:0.0, dy:-(self.baseUnit / 2)), duration:1.0)
+        let speedRandomizer = (1.0 / 4) - ((1.0 / 2) * (Double(arc4random_uniform(UInt32(101))) / 100))
+        
+        let action = SKAction.moveBy(CGVector(dx:0.0, dy:-(radius * 2)), duration:(self.monsterSpeed + speedRandomizer))
         monster.runAction(SKAction.repeatActionForever(action))
         
         self.addChild(monster)
         
         let spawnDelayOffset = timer.userInfo != nil ? timer.userInfo as! Double : 0.0
-        let spawnDelayRandomizer = (self.monsterSpawnDelay / 2) - (self.monsterSpawnDelay * (Double(arc4random_uniform(UInt32(self.monsterSpawnDelay + 1))) / self.monsterSpawnDelay))
+        let spawnDelayRandomizer = (self.monsterSpawnDelay / 2) - (self.monsterSpawnDelay * (Double(arc4random_uniform(UInt32(101))) / 100))
         
         self.monsterSpawnTimer = NSTimer.scheduledTimerWithTimeInterval((spawnDelayOffset + self.monsterSpawnDelay + spawnDelayRandomizer), target:self, selector:"spawnMonster:", userInfo:(spawnDelayRandomizer * -1), repeats:false)
     }
