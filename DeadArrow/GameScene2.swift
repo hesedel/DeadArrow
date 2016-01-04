@@ -31,7 +31,6 @@ class GameScene2: SKScene, SKPhysicsContactDelegate {
     var hasGameStarted = false
     let monsterSpawnDelay = 3.0
     var monsterSpawnTimer = NSTimer()
-    let monsterSpeed = 1.0
     let timeUntilBodiesVanish = 3.0
     
     override func didMoveToView(view: SKView) {
@@ -47,7 +46,7 @@ class GameScene2: SKScene, SKPhysicsContactDelegate {
         self.physicsWorld.contactDelegate = self
         
         self.field = SKShapeNode(rect:CGRect(origin:CGPoint(x:-(self.width / 2), y:0.0), size:CGSize(width:self.width, height:self.width)))
-        self.bow = Bow(baseUnit: self.baseUnit)
+        self.bow = Bow(baseUnit:self.baseUnit)
         self.bowDrawingZone = SKShapeNode(rect:CGRect(origin:CGPoint(x:-self.bow.width_2, y:-self.bow.height), size:CGSize(width:self.bow.width, height:self.bow.height)))
         
         self.bowDrawingZone.userInteractionEnabled = true
@@ -216,7 +215,7 @@ class GameScene2: SKScene, SKPhysicsContactDelegate {
         self.monsterSpawnTimer.invalidate()
         
         self.enumerateChildNodesWithName("monster", usingBlock:{
-            (node, _) in
+            (node, stop) in
             node.removeAllActions()
         })
         
@@ -224,27 +223,21 @@ class GameScene2: SKScene, SKPhysicsContactDelegate {
     }
     
     func spawnMonster(timer: NSTimer = NSTimer()) {
-        let radius = self.baseUnit / 3
-        let monster = Monster(circleOfRadius:radius)
+        let monster = Monster(baseUnit:self.baseUnit)
+        
         monster.name = "monster"
-        monster.position = CGPoint(x:(radius + CGFloat(arc4random_uniform(UInt32(self.width - (radius * 2))))), y:(CGRectGetMaxY(self.field.frame) + radius))
-        monster.fillColor = UIColor.redColor()
-        monster.strokeColor = UIColor.blackColor()
-        monster.physicsBody = SKPhysicsBody(circleOfRadius:(self.baseUnit / 4))
-        monster.physicsBody!.affectedByGravity = false
+        
+        monster.position = CGPoint(x:(monster.radius + CGFloat(arc4random_uniform(UInt32(self.width - (monster.radius * 2))))), y:(CGRectGetMaxY(self.field.frame) + monster.radius))
+        
         monster.physicsBody!.categoryBitMask = Categories.monster.rawValue
         monster.physicsBody!.collisionBitMask = Categories.none.rawValue
         monster.physicsBody!.contactTestBitMask = Categories.field.rawValue
         
-        let speedRandomizer = (1.0 / 4) - ((1.0 / 2) * (Double(arc4random_uniform(UInt32(101))) / 100))
-        
-        let action = SKAction.moveBy(CGVector(dx:0.0, dy:-(radius * 2)), duration:(self.monsterSpeed + speedRandomizer))
-        monster.runAction(SKAction.repeatActionForever(action))
-        
         self.addChild(monster)
         
         let spawnDelayOffset = timer.userInfo != nil ? timer.userInfo as! Double : 0.0
-        let spawnDelayRandomizer = (self.monsterSpawnDelay / 2) - (self.monsterSpawnDelay * (Double(arc4random_uniform(UInt32(101))) / 100))
+        let randomNumber = Double(arc4random_uniform(UInt32(101))) / 100
+        let spawnDelayRandomizer = (self.monsterSpawnDelay / 2) - (self.monsterSpawnDelay * randomNumber)
         
         self.monsterSpawnTimer = NSTimer.scheduledTimerWithTimeInterval((spawnDelayOffset + self.monsterSpawnDelay + spawnDelayRandomizer), target:self, selector:"spawnMonster:", userInfo:(spawnDelayRandomizer * -1), repeats:false)
     }

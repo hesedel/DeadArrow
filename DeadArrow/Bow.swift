@@ -27,7 +27,7 @@ class Bow:SKShapeNode {
         super.init()
     }
     
-    convenience init(baseUnit:CGFloat) {
+    convenience init(baseUnit: CGFloat) {
         self.init()
         
         self.baseUnit = baseUnit
@@ -72,7 +72,7 @@ class Bow:SKShapeNode {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func drawBow(drawDistance:CGFloat = 0.0) {
+    func drawBow(drawDistance: CGFloat = 0.0) {
         self.drawDistance = [0.0, drawDistance - self.height].maxElement()!
         self.drawDistance = [self.maxDrawDistance, self.drawDistance].minElement()!
         let drawDistance_4 = self.drawDistance / 4
