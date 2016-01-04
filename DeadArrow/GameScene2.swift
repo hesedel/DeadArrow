@@ -11,7 +11,7 @@ import SpriteKit
 class GameScene2: SKScene, SKPhysicsContactDelegate {
     var width:CGFloat = 0.0
     var baseUnit:CGFloat = 0.0
-    var reusablePath = CGPathCreateMutable()
+    
     enum Categories:UInt32 {
         case none = 0b000
         case field = 0b001
@@ -19,6 +19,9 @@ class GameScene2: SKScene, SKPhysicsContactDelegate {
         case monster = 0b100
         case all = 0b111
     }
+    
+    var reusablePath = CGPathCreateMutable()
+    
     var field = SKShapeNode()
     var bow = Bow()
     var bowDrawingZone = SKShapeNode()
@@ -26,7 +29,9 @@ class GameScene2: SKScene, SKPhysicsContactDelegate {
     let arrowSpeed = 0.025
     
     var hasGameStarted = false
+    let monsterSpawnDelay = 3.0
     var monsterSpawnTimer = NSTimer()
+    let timeUntilBodiesVanish = 3.0
     
     override func didMoveToView(view: SKView) {
         /* Setup your scene here */
@@ -169,8 +174,7 @@ class GameScene2: SKScene, SKPhysicsContactDelegate {
             nodeB.physicsBody!.categoryBitMask = Categories.none.rawValue
             nodeB.removeAllActions()
             
-            let arr = [nodeA, nodeB]
-            NSTimer.scheduledTimerWithTimeInterval(3.0, target:self, selector:"removeTheDead:", userInfo:arr, repeats:true)
+            NSTimer.scheduledTimerWithTimeInterval(self.timeUntilBodiesVanish, target:self, selector:"vanishBodies:", userInfo:[nodeA, nodeB], repeats:false)
         }
     }
     
@@ -198,7 +202,7 @@ class GameScene2: SKScene, SKPhysicsContactDelegate {
         }
         
         self.enumerateChildNodesWithName("monster", usingBlock:{
-            (node, _) in
+            (node, stop) in
             node.removeFromParent()
         })
         
@@ -218,7 +222,7 @@ class GameScene2: SKScene, SKPhysicsContactDelegate {
         self.hasGameStarted = false
     }
     
-    func spawnMonster() {
+    func spawnMonster(timer: NSTimer = NSTimer()) {
         let radius = self.baseUnit / 3
         let monster = Monster(circleOfRadius:radius)
         monster.name = "monster"
@@ -236,10 +240,13 @@ class GameScene2: SKScene, SKPhysicsContactDelegate {
         
         self.addChild(monster)
         
-        self.monsterSpawnTimer = NSTimer.scheduledTimerWithTimeInterval(3.0, target:self, selector:"spawnMonster", userInfo:nil, repeats:false)
+        let spawnDelayOffset = timer.userInfo != nil ? timer.userInfo as! Double : 0.0
+        let spawnDelayRandomizer = (self.monsterSpawnDelay / 2) - (self.monsterSpawnDelay * (Double(arc4random_uniform(UInt32(self.monsterSpawnDelay + 1))) / self.monsterSpawnDelay))
+        
+        self.monsterSpawnTimer = NSTimer.scheduledTimerWithTimeInterval((spawnDelayOffset + self.monsterSpawnDelay + spawnDelayRandomizer), target:self, selector:"spawnMonster:", userInfo:(spawnDelayRandomizer * -1), repeats:false)
     }
     
-    func removeTheDead(timer: NSTimer) {
+    func vanishBodies(timer: NSTimer) {
         timer.userInfo![0].removeFromParent()
         timer.userInfo![1].removeFromParent()
     }
