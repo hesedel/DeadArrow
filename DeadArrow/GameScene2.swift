@@ -231,7 +231,22 @@ class GameScene2: SKScene, SKPhysicsContactDelegate {
     }
     
     func spawnMonster(timer: NSTimer = NSTimer()) {
-        let monster = Monster(baseUnit:self.baseUnit, randomizeRadiusAndMovementSpeed:(self.monsterSpawnCount >= 16))
+        var enhancements = Monster.Enhancements.none.rawValue
+        
+        if (self.monsterSpawnCount == 16) {
+            enhancements |= Monster.Enhancements.movementSpeed.rawValue
+        }
+        
+        if (self.monsterSpawnCount > 16) {
+            let probability = 1 + round((1 / CGFloat(self.monsterSpawnCount - 16)) * 100)
+            let randomNumber = arc4random_uniform(UInt32(probability))
+            
+            if (randomNumber == 0) {
+                enhancements |= Monster.Enhancements.movementSpeed.rawValue
+            }
+        }
+        
+        let monster = Monster(baseUnit:self.baseUnit, randomizeRadiusAndMovementSpeed:(self.monsterSpawnCount >= 8), enhancements:enhancements)
         
         monster.name = "monster"
         

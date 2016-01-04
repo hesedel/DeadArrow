@@ -16,18 +16,29 @@ class Monster:SKShapeNode {
     var lifeMax = 0.0
     var life = 0.0
     
+    enum Enhancements:UInt32 {
+        case none = 0b00
+        case movementSpeed = 0b01
+        case all = 0b11
+    }
+    
+    var enhancements = Enhancements.none.rawValue
+    
     override init() {
         super.init()
     }
     
-    convenience init(baseUnit: CGFloat, randomizeRadiusAndMovementSpeed: Bool = false) {
+    convenience init(baseUnit: CGFloat, randomizeRadiusAndMovementSpeed: Bool = false, enhancements: UInt32 = Enhancements.none.rawValue) {
         self.init()
         
         self.baseUnit = baseUnit
         self.radius = self.baseUnit / 3
+        
         if (randomizeRadiusAndMovementSpeed) {
             self.randomizeRadius()
         }
+        
+        self.enhancements = enhancements
         
         self.path = SKShapeNode(circleOfRadius:self.radius).path
         
@@ -40,6 +51,7 @@ class Monster:SKShapeNode {
         if (randomizeRadiusAndMovementSpeed) {
             self.randomizeMovementSpeed()
         }
+        
         self.addMovement()
     }
     
@@ -62,7 +74,7 @@ class Monster:SKShapeNode {
     }
     
     func addMovement() {
-        let action = SKAction.moveBy(CGVector(dx:0.0, dy:-(self.radius * 2)), duration:self.movementSpeed)
+        let action = SKAction.moveBy(CGVector(dx:0.0, dy:-(self.radius * 2)), duration:(Enhancements.movementSpeed.rawValue & self.enhancements == Enhancements.none.rawValue ? self.movementSpeed : self.movementSpeed / 2))
         
         self.runAction(SKAction.repeatActionForever(action))
     }
