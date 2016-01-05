@@ -19,6 +19,7 @@ class Monster:SKShapeNode {
     enum Enhancements:UInt32 {
         case none = 0b00
         case movementSpeed = 0b01
+        case sideStepping = 0b10
         case all = 0b11
     }
     

@@ -13,16 +13,19 @@ class GameScene2: SKScene, SKPhysicsContactDelegate {
     var baseUnit:CGFloat = 0.0
     
     enum Categories:UInt32 {
-        case none = 0b000
-        case field = 0b001
-        case arrow = 0b010
-        case monster = 0b100
-        case all = 0b111
+        case none    = 0b0000
+        case field   = 0b0001
+        case wall    = 0b0010
+        case arrow   = 0b0100
+        case monster = 0b1000
+        case all     = 0b1111
     }
     
     var reusablePath = CGPathCreateMutable()
     
     var field = SKShapeNode()
+    var wallLeft = SKShapeNode()
+    var wallRight = SKShapeNode()
     var bow = Bow()
     var bowDrawingZone = SKShapeNode()
     var fingerHasCrossedBowDrawingZone = false
@@ -49,26 +52,46 @@ class GameScene2: SKScene, SKPhysicsContactDelegate {
         self.physicsWorld.contactDelegate = self
         
         self.field = SKShapeNode(rect:CGRect(origin:CGPoint(x:-(self.width / 2), y:0.0), size:CGSize(width:self.width, height:self.width)))
+        self.reusablePath = CGPathCreateMutable()
+        CGPathMoveToPoint(self.reusablePath, nil, -(self.width / 2), self.width)
+        CGPathAddLineToPoint(self.reusablePath, nil, -(self.width / 2), 0.0)
+        self.wallLeft.path = self.reusablePath
+        self.reusablePath = CGPathCreateMutable()
+        CGPathMoveToPoint(self.reusablePath, nil, (self.width / 2), self.width)
+        CGPathAddLineToPoint(self.reusablePath, nil, (self.width / 2), 0.0)
+        self.wallRight.path = self.reusablePath
         self.bow = Bow(baseUnit:self.baseUnit)
         self.bowDrawingZone = SKShapeNode(rect:CGRect(origin:CGPoint(x:-self.bow.width_2, y:-self.bow.height), size:CGSize(width:self.bow.width, height:self.bow.height)))
         
         self.bowDrawingZone.userInteractionEnabled = true
         
         self.field.position = CGPoint(x:CGRectGetMidX(self.frame), y:(self.width * (1 / 3)))
+        self.wallLeft.position = self.field.position
+        self.wallRight.position = self.field.position
         self.bow.position = self.field.position
         self.bowDrawingZone.position = self.bow.position
         
         self.field.fillColor = UIColor.whiteColor()
         self.field.lineWidth = 0.0
+        self.wallLeft.strokeColor = UIColor.blackColor()
+        self.wallRight.strokeColor = UIColor.blackColor()
         self.bowDrawingZone.lineWidth = 0.0
         
         self.field.physicsBody = SKPhysicsBody(polygonFromPath:self.field.path!)
         self.field.physicsBody!.affectedByGravity = false
         self.field.physicsBody!.categoryBitMask = Categories.field.rawValue
         self.field.physicsBody!.collisionBitMask = Categories.none.rawValue
+        self.wallLeft.physicsBody = SKPhysicsBody(edgeChainFromPath:self.wallLeft.path!)
+        self.wallLeft.physicsBody!.categoryBitMask = Categories.wall.rawValue
+        self.wallLeft.physicsBody!.collisionBitMask = Categories.none.rawValue
+        self.wallRight.physicsBody = SKPhysicsBody(edgeChainFromPath:self.wallRight.path!)
+        self.wallRight.physicsBody!.categoryBitMask = Categories.wall.rawValue
+        self.wallRight.physicsBody!.collisionBitMask = Categories.none.rawValue
         
         //self.addChild(myLabel)
         self.addChild(self.field)
+        self.addChild(self.wallLeft)
+        self.addChild(self.wallRight)
         self.addChild(self.bowDrawingZone)
         self.addChild(self.bow)
     }
@@ -143,7 +166,6 @@ class GameScene2: SKScene, SKPhysicsContactDelegate {
             arrow.zRotation = self.bow.zRotation
             arrow.strokeColor = UIColor.blackColor()
             arrow.physicsBody = SKPhysicsBody(edgeChainFromPath:arrow.path!)
-            arrow.physicsBody!.affectedByGravity = false
             arrow.physicsBody!.categoryBitMask = Categories.arrow.rawValue
             arrow.physicsBody!.collisionBitMask = Categories.none.rawValue
             arrow.physicsBody!.contactTestBitMask = Categories.field.rawValue | Categories.monster.rawValue
@@ -243,6 +265,19 @@ class GameScene2: SKScene, SKPhysicsContactDelegate {
             
             if (randomNumber == 0) {
                 enhancements |= Monster.Enhancements.movementSpeed.rawValue
+            }
+        }
+        
+        if (self.monsterSpawnCount == 32) {
+            enhancements |= Monster.Enhancements.movementSpeed.rawValue
+        }
+        
+        if (self.monsterSpawnCount > 32) {
+            let probability = 1 + round((1 / CGFloat(self.monsterSpawnCount - 32)) * 100)
+            let randomNumber = arc4random_uniform(UInt32(probability))
+            
+            if (randomNumber == 0) {
+                enhancements |= Monster.Enhancements.sideStepping.rawValue
             }
         }
         
