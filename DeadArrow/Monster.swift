@@ -91,7 +91,7 @@ class Monster:SKShapeNode {
             
             self.dx = self.dy * CGFloat(cos(rotation))
             self.dy = self.dy * CGFloat(sin(rotation))
-            duration /= 3
+            duration /= 2
         }
         
         let action = SKAction.moveBy(CGVector(dx:self.dx, dy:self.dy), duration:duration)
@@ -109,7 +109,7 @@ class Monster:SKShapeNode {
                 duration /= 2
             }
             
-            duration /= 3
+            duration /= 2
             
             let action = SKAction.moveBy(CGVector(dx:(self.dx * -1), dy:self.dy), duration:duration)
             
