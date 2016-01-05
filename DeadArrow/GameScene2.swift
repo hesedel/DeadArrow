@@ -203,6 +203,10 @@ class GameScene2: SKScene, SKPhysicsContactDelegate {
             
             NSTimer.scheduledTimerWithTimeInterval(self.timeUntilBodiesVanish, target:self, selector:"vanishBodies:", userInfo:[nodeA, nodeB], repeats:false)
         }
+        
+        if (nodeA.physicsBody!.categoryBitMask == Categories.wall.rawValue && nodeB.physicsBody!.categoryBitMask == Categories.monster.rawValue) {
+            (nodeB as! Monster).onContactWall()
+        }
     }
     
     func didEndContact(contact: SKPhysicsContact) {
@@ -269,7 +273,7 @@ class GameScene2: SKScene, SKPhysicsContactDelegate {
         }
         
         if (self.monsterSpawnCount == 32) {
-            enhancements |= Monster.Enhancements.movementSpeed.rawValue
+            enhancements |= Monster.Enhancements.sideStepping.rawValue
         }
         
         if (self.monsterSpawnCount > 32) {
@@ -289,7 +293,7 @@ class GameScene2: SKScene, SKPhysicsContactDelegate {
         
         monster.physicsBody!.categoryBitMask = Categories.monster.rawValue
         monster.physicsBody!.collisionBitMask = Categories.none.rawValue
-        monster.physicsBody!.contactTestBitMask = Categories.field.rawValue
+        monster.physicsBody!.contactTestBitMask = Categories.field.rawValue | Categories.wall.rawValue
         
         self.addChild(monster)
         

@@ -12,9 +12,13 @@ class Monster:SKShapeNode {
     var baseUnit:CGFloat = 0.0
     var radius:CGFloat = 0.0
     
-    var movementSpeed = 1.0
     var lifeMax = 0.0
     var life = 0.0
+    
+    // movement
+    var dx:CGFloat = 0.0
+    var dy:CGFloat = 0.0
+    var movementSpeed = 1.0
     
     enum Enhancements:UInt32 {
         case none = 0b00
@@ -75,8 +79,41 @@ class Monster:SKShapeNode {
     }
     
     func addMovement() {
-        let action = SKAction.moveBy(CGVector(dx:0.0, dy:-(self.radius * 2)), duration:(Enhancements.movementSpeed.rawValue & self.enhancements == Enhancements.none.rawValue ? self.movementSpeed : self.movementSpeed / 2))
+        self.dy = -(self.radius * 2)
+        var duration = self.movementSpeed
+        
+        if (Enhancements.movementSpeed.rawValue & self.enhancements > Enhancements.none.rawValue) {
+            duration /= 2
+        }
+        
+        if (Enhancements.sideStepping.rawValue & self.enhancements > Enhancements.none.rawValue) {
+            let rotation = arc4random_uniform(UInt32(2)) == 0 ? M_PI - M_PI_4 : M_PI_4
+            
+            self.dx = self.dy * CGFloat(cos(rotation))
+            self.dy = self.dy * CGFloat(sin(rotation))
+            duration /= 3
+        }
+        
+        let action = SKAction.moveBy(CGVector(dx:self.dx, dy:self.dy), duration:duration)
         
         self.runAction(SKAction.repeatActionForever(action))
+    }
+    
+    func onContactWall() {
+        if (Enhancements.sideStepping.rawValue & self.enhancements > Enhancements.none.rawValue) {
+            self.removeAllActions()
+            
+            var duration = self.movementSpeed
+            
+            if (Enhancements.movementSpeed.rawValue & self.enhancements > Enhancements.none.rawValue) {
+                duration /= 2
+            }
+            
+            duration /= 3
+            
+            let action = SKAction.moveBy(CGVector(dx:(self.dx * -1), dy:self.dy), duration:duration)
+            
+            self.runAction(SKAction.repeatActionForever(action))
+        }
     }
 }
