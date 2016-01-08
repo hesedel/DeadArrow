@@ -14,6 +14,9 @@ class Monster:SKShapeNode {
     var baseUnit:CGFloat = 0.0
     var radius:CGFloat = 0.0
     
+    // nodes
+    var image = SKSpriteNode()
+    
     // movement
     var dx:CGFloat = 0.0
     var dy:CGFloat = 0.0
@@ -57,14 +60,20 @@ class Monster:SKShapeNode {
         
         // create nodes
         self.path = SKShapeNode(circleOfRadius:self.radius).path
+        self.image = SKSpriteNode(imageNamed:"zombie")
+        self.image.size.width = self.radius * 2
+        self.image.size.height = self.radius * 2
         
         // set nodes' styles
-        self.fillColor = UIColor.redColor()
+        self.fillColor = UIColor.greenColor()
         self.strokeColor = UIColor.blackColor()
         
         // set nodes' physics bodies
         self.physicsBody = SKPhysicsBody(circleOfRadius:(self.radius * (2 / 3)))
         self.physicsBody!.affectedByGravity = false
+        
+        // add nodes to self
+        self.addChild(image)
         
         if (randomizeRadiusAndMovementSpeed) {
             self.randomizeMovementSpeed()
@@ -170,7 +179,8 @@ class Monster:SKShapeNode {
     }
     
     func die() {
-        self.fillColor = UIColor.blackColor()
+        self.fillColor = UIColor.redColor()
+        self.image.texture = SKTexture(imageNamed:"zombie--dead")
         
         self.stopMovement()
         
