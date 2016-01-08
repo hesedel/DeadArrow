@@ -9,8 +9,30 @@
 import SpriteKit
 
 class GameScene2: SKScene, SKPhysicsContactDelegate {
+    
+    // measurements
     var width:CGFloat = 0.0
     var baseUnit:CGFloat = 0.0
+    
+    var reusablePath = CGPathCreateMutable()
+    
+    // nodes
+    var field = SKShapeNode()
+    var wallLeft = SKShapeNode()
+    var wallRight = SKShapeNode()
+    var bow = Bow()
+    var bowDrawingZone = SKShapeNode()
+    
+    // timing
+    let arrowSpeed = 1.0 / 32
+    let monsterSpawnDelay = 3.0
+    var monsterSpawnTimer = NSTimer()
+    
+    // game progress
+    var fingerHasCrossedBowDrawingZone = false
+    var hasGameStarted = false
+    var monsterSpawnCount = 0
+    var killCount = 0
     
     enum Categories:UInt32 {
         case none    = 0b0000
@@ -20,24 +42,6 @@ class GameScene2: SKScene, SKPhysicsContactDelegate {
         case monster = 0b1000
         case all     = 0b1111
     }
-    
-    var reusablePath = CGPathCreateMutable()
-    
-    var field = SKShapeNode()
-    var wallLeft = SKShapeNode()
-    var wallRight = SKShapeNode()
-    var bow = Bow()
-    var bowDrawingZone = SKShapeNode()
-    var fingerHasCrossedBowDrawingZone = false
-    let arrowSpeed = 1.0 / 32
-    
-    let monsterSpawnDelay = 3.0
-    var monsterSpawnTimer = NSTimer()
-    let timeUntilBodiesVanish = 3.0
-    
-    var hasGameStarted = false
-    var monsterSpawnCount = 0
-    var killCount = 0
     
     override func didMoveToView(view: SKView) {
         /* Setup your scene here */
@@ -51,6 +55,7 @@ class GameScene2: SKScene, SKPhysicsContactDelegate {
         
         self.physicsWorld.contactDelegate = self
         
+        // create nodes
         self.field = SKShapeNode(rect:CGRect(origin:CGPoint(x:-(self.width / 2), y:0.0), size:CGSize(width:self.width, height:self.width)))
         self.reusablePath = CGPathCreateMutable()
         CGPathMoveToPoint(self.reusablePath, nil, -(self.width / 2), self.width)
@@ -63,20 +68,24 @@ class GameScene2: SKScene, SKPhysicsContactDelegate {
         self.bow = Bow(baseUnit:self.baseUnit)
         self.bowDrawingZone = SKShapeNode(rect:CGRect(origin:CGPoint(x:-self.bow.width_2, y:-self.bow.height), size:CGSize(width:self.bow.width, height:self.bow.height)))
         
+        // set nodes' interaction
         self.bowDrawingZone.userInteractionEnabled = true
         
+        // set nodes' positions
         self.field.position = CGPoint(x:CGRectGetMidX(self.frame), y:(self.width * (1 / 3)))
         self.wallLeft.position = self.field.position
         self.wallRight.position = self.field.position
         self.bow.position = self.field.position
         self.bowDrawingZone.position = self.bow.position
         
+        // set nodes' styles
         self.field.fillColor = UIColor.whiteColor()
         self.field.lineWidth = 0.0
         self.wallLeft.strokeColor = UIColor.blackColor()
         self.wallRight.strokeColor = UIColor.blackColor()
         self.bowDrawingZone.lineWidth = 0.0
         
+        // set nodes' physics bodies
         self.field.physicsBody = SKPhysicsBody(polygonFromPath:self.field.path!)
         self.field.physicsBody!.affectedByGravity = false
         self.field.physicsBody!.categoryBitMask = Categories.field.rawValue
@@ -88,6 +97,7 @@ class GameScene2: SKScene, SKPhysicsContactDelegate {
         self.wallRight.physicsBody!.categoryBitMask = Categories.wall.rawValue
         self.wallRight.physicsBody!.collisionBitMask = Categories.none.rawValue
         
+        // add nodes to self
         //self.addChild(myLabel)
         self.addChild(self.field)
         self.addChild(self.wallLeft)
@@ -155,7 +165,7 @@ class GameScene2: SKScene, SKPhysicsContactDelegate {
     }
     
     override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
-        if let touch = touches.first {
+        //if let touch = touches.first {
             if (self.bow.drawDistance == 0.0) {
                 return
             }
@@ -181,31 +191,27 @@ class GameScene2: SKScene, SKPhysicsContactDelegate {
             self.bowDrawingZone.zRotation = self.bow.zRotation
             
             self.fingerHasCrossedBowDrawingZone = false
-        }
+        //}
     }
    
     override func update(currentTime: CFTimeInterval) {
         /* Called before each frame is rendered */
     }
     
+    // MARK: Physics Contact Functions
+    
     func didBeginContact(contact: SKPhysicsContact) {
         let nodeA = contact.bodyA.node as! SKShapeNode
         let nodeB = contact.bodyB.node as! SKShapeNode
         
         if (nodeA.physicsBody!.categoryBitMask == Categories.arrow.rawValue && nodeB.physicsBody!.categoryBitMask == Categories.monster.rawValue) {
-            nodeA.physicsBody!.categoryBitMask = Categories.none.rawValue
-            nodeA.removeAllActions()
-            nodeB.fillColor = UIColor.blackColor()
-            nodeB.physicsBody!.categoryBitMask = Categories.none.rawValue
-            nodeB.removeAllActions()
+            self.didBeginContactBetweenArrowAndMonster(nodeA, nodeB:nodeB)
             
-            self.killCount += 1
-            
-            NSTimer.scheduledTimerWithTimeInterval(self.timeUntilBodiesVanish, target:self, selector:"vanishBodies:", userInfo:[nodeA, nodeB], repeats:false)
+            return
         }
         
         if (nodeA.physicsBody!.categoryBitMask == Categories.wall.rawValue && nodeB.physicsBody!.categoryBitMask == Categories.monster.rawValue) {
-            (nodeB as! Monster).onContactWall()
+            self.didBeginContactBetweenMonsterAndWall(nodeA, nodeB:nodeB)
         }
     }
     
@@ -214,15 +220,46 @@ class GameScene2: SKScene, SKPhysicsContactDelegate {
         let nodeB = contact.bodyB.node as! SKShapeNode
         
         if (nodeA.physicsBody!.categoryBitMask == Categories.arrow.rawValue && nodeB.physicsBody!.categoryBitMask == Categories.field.rawValue) {
-            nodeA.removeAllActions()
-            nodeA.removeFromParent()
+            self.didEndContactBetweenArrowAndField(nodeA, nodeB:nodeB)
             
             return
         }
         
         if (nodeA.physicsBody!.categoryBitMask == Categories.field.rawValue && nodeB.physicsBody!.categoryBitMask == Categories.monster.rawValue) {
-            self.endGame()
+            self.didEndContactBetweenMonsterAndField(nodeA, nodeB:nodeB)
         }
+    }
+    
+    // MARK: Physics Contact Functions - Begin
+    
+    func didBeginContactBetweenArrowAndMonster(nodeA: SKShapeNode, nodeB: SKShapeNode) {
+        nodeA.physicsBody!.categoryBitMask = Categories.none.rawValue
+        nodeA.removeAllActions()
+        nodeA.removeFromParent()
+        nodeA.position = CGPoint(x:(nodeA.position.x - nodeB.position.x), y:(nodeA.position.y - nodeB.position.y))
+        
+        nodeB.addChild(nodeA)
+        
+        if ((nodeB as! Monster).takeDamage()) {
+            nodeB.physicsBody!.categoryBitMask = Categories.none.rawValue
+            
+            self.killCount += 1
+        }
+    }
+    
+    func didBeginContactBetweenMonsterAndWall(nodeA: SKShapeNode, nodeB: SKShapeNode) {
+        (nodeB as! Monster).didBeginContactWall()
+    }
+    
+    // MARK: Physics Contact Functions - End
+    
+    func didEndContactBetweenArrowAndField(nodeA: SKShapeNode, nodeB: SKShapeNode) {
+        nodeA.removeAllActions()
+        nodeA.removeFromParent()
+    }
+    
+    func didEndContactBetweenMonsterAndField(nodeA: SKShapeNode, nodeB: SKShapeNode) {
+        self.endGame()
     }
     
     // MARK: Game Event Functions
@@ -250,7 +287,7 @@ class GameScene2: SKScene, SKPhysicsContactDelegate {
         
         self.enumerateChildNodesWithName("monster", usingBlock:{
             (node, stop) in
-            node.removeAllActions()
+            (node as! Monster).stopMovement()
         })
         
         self.hasGameStarted = false
@@ -259,12 +296,12 @@ class GameScene2: SKScene, SKPhysicsContactDelegate {
     func spawnMonster(timer: NSTimer = NSTimer()) {
         var enhancements = Monster.Enhancements.none.rawValue
         
-        if (self.monsterSpawnCount == 16) {
+        if (self.monsterSpawnCount == 8) {
             enhancements |= Monster.Enhancements.movementSpeed.rawValue
         }
         
-        if (self.monsterSpawnCount > 16) {
-            let probability = 1 + round((1 / CGFloat(self.monsterSpawnCount - 16)) * 100)
+        if (self.monsterSpawnCount > 8) {
+            let probability = 1 + round((1 / CGFloat(self.monsterSpawnCount - 8)) * 100)
             let randomNumber = arc4random_uniform(UInt32(probability))
             
             if (randomNumber == 0) {
@@ -272,16 +309,31 @@ class GameScene2: SKScene, SKPhysicsContactDelegate {
             }
         }
         
-        if (self.monsterSpawnCount == 32) {
+        if (self.monsterSpawnCount == 16) {
             enhancements |= Monster.Enhancements.sideStepping.rawValue
         }
         
-        if (self.monsterSpawnCount > 32) {
-            let probability = 1 + round((1 / CGFloat(self.monsterSpawnCount - 32)) * 100)
+        if (self.monsterSpawnCount > 16) {
+            let probability = 1 + round((1 / CGFloat(self.monsterSpawnCount - 16)) * 100)
             let randomNumber = arc4random_uniform(UInt32(probability))
             
             if (randomNumber == 0) {
                 enhancements |= Monster.Enhancements.sideStepping.rawValue
+            }
+        }
+        
+        if (self.monsterSpawnCount == 24) {
+            enhancements |= Monster.Enhancements.sideStepping.rawValue
+            enhancements |= Monster.Enhancements.sideStepping2.rawValue
+        }
+        
+        if (self.monsterSpawnCount > 24) {
+            let probability = 1 + round((1 / CGFloat(self.monsterSpawnCount - 24)) * 100)
+            let randomNumber = arc4random_uniform(UInt32(probability))
+            
+            if (randomNumber == 0) {
+                enhancements |= Monster.Enhancements.sideStepping.rawValue
+                enhancements |= Monster.Enhancements.sideStepping2.rawValue
             }
         }
         
@@ -299,15 +351,10 @@ class GameScene2: SKScene, SKPhysicsContactDelegate {
         
         self.monsterSpawnCount += 1
         
-        let spawnDelayOffset = timer.userInfo != nil ? timer.userInfo as! Double : 0.0
+        let spawnDelayOffset = timer.userInfo == nil ? 0.0 : timer.userInfo as! Double
         let randomNumber = Double(arc4random_uniform(UInt32(101))) / 100
         let spawnDelayRandomizer = (self.monsterSpawnDelay / 2) - (self.monsterSpawnDelay * randomNumber)
         
         self.monsterSpawnTimer = NSTimer.scheduledTimerWithTimeInterval((spawnDelayOffset + self.monsterSpawnDelay + spawnDelayRandomizer), target:self, selector:"spawnMonster:", userInfo:(spawnDelayRandomizer * -1), repeats:false)
-    }
-    
-    func vanishBodies(timer: NSTimer) {
-        timer.userInfo![0].removeFromParent()
-        timer.userInfo![1].removeFromParent()
     }
 }

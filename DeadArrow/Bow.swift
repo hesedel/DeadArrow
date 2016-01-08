@@ -9,13 +9,18 @@
 import SpriteKit
 
 class Bow:SKShapeNode {
+    
+    // measurements
     var baseUnit:CGFloat = 0.0
     var width:CGFloat = 0.0
     var width_2:CGFloat = 0.0
     var height:CGFloat = 0.0
     var maxDrawDistance:CGFloat = 0.0
     var drawDistance:CGFloat = 0.0
+    
     var reusablePath = CGPathCreateMutable()
+    
+    // nodes
     var bow = SKShapeNode()
     var string = SKShapeNode()
     var arrow = SKShapeNode()
@@ -38,6 +43,7 @@ class Bow:SKShapeNode {
         self.height = self.baseUnit / 3
         self.maxDrawDistance = self.width_2 - self.height
         
+        // create nodes
         self.reusablePath = CGPathCreateMutable()
         CGPathMoveToPoint(self.reusablePath, nil, 0, self.maxDrawDistance)
         CGPathAddLineToPoint(self.reusablePath, nil, 0.0, -self.height)
@@ -46,10 +52,14 @@ class Bow:SKShapeNode {
         self.left = SKShapeNode(circleOfRadius:self.lineWidth)
         self.right = SKShapeNode(circleOfRadius:self.lineWidth)
         
+        // set nodes' visibility
         self.arrow.hidden = true;
+        
+        // set nodes' positions
         self.left.position = CGPoint(x:-self.width_2, y:-self.height)
         self.right.position = CGPoint(x:self.width_2, y:-self.height)
         
+        // set nodes' styles
         self.bow.lineWidth = self.lineWidth
         self.bow.strokeColor = UIColor.blackColor()
         self.arrow.strokeColor = UIColor.blackColor()
@@ -60,6 +70,7 @@ class Bow:SKShapeNode {
         
         self.drawBow()
         
+        // add nodes to self
         self.addChild(self.string)
         self.addChild(self.bow)
         self.addChild(self.arrow)
@@ -86,6 +97,7 @@ class Bow:SKShapeNode {
         self.bow.path = self.reusablePath
         
         self.arrow.hidden = self.drawDistance == 0.0
+        
         self.arrow.position.y = -self.drawDistance
         
         self.reusablePath = CGPathCreateMutable()

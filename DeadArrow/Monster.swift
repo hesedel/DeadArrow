@@ -9,22 +9,30 @@
 import SpriteKit
 
 class Monster:SKShapeNode {
+    
+    // measurements
     var baseUnit:CGFloat = 0.0
     var radius:CGFloat = 0.0
-    
-    var lifeMax = 0.0
-    var life = 0.0
     
     // movement
     var dx:CGFloat = 0.0
     var dy:CGFloat = 0.0
     var movementSpeed = 1.0
+    var movementSpeedModifier = 1.0
+    let movementActionKey = "movement"
+    var movementTimer = NSTimer()
+    
+    // ...
+    var lifeMax = 0.0
+    var life = 0.0
+    let timeUntilBodyVanishes = 3.0
     
     enum Enhancements:UInt32 {
-        case none = 0b00
-        case movementSpeed = 0b01
-        case sideStepping = 0b10
-        case all = 0b11
+        case none          = 0b000
+        case movementSpeed = 0b001
+        case sideStepping  = 0b010
+        case sideStepping2 = 0b100
+        case all           = 0b111
     }
     
     var enhancements = Enhancements.none.rawValue
@@ -39,17 +47,22 @@ class Monster:SKShapeNode {
         self.baseUnit = baseUnit
         self.radius = self.baseUnit / 3
         
+        self.dy = -(self.radius * 2)
+        
         if (randomizeRadiusAndMovementSpeed) {
             self.randomizeRadius()
         }
         
         self.enhancements = enhancements
         
+        // create nodes
         self.path = SKShapeNode(circleOfRadius:self.radius).path
         
+        // set nodes' styles
         self.fillColor = UIColor.redColor()
         self.strokeColor = UIColor.blackColor()
         
+        // set nodes' physics bodies
         self.physicsBody = SKPhysicsBody(circleOfRadius:(self.radius * (2 / 3)))
         self.physicsBody!.affectedByGravity = false
         
@@ -57,12 +70,14 @@ class Monster:SKShapeNode {
             self.randomizeMovementSpeed()
         }
         
-        self.addMovement()
+        self.startMovement()
     }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
+    // MARK: init Helper Functions
     
     func randomizeRadius() {
         let randomNumber = CGFloat(arc4random_uniform(UInt32(101))) / 100
@@ -78,12 +93,19 @@ class Monster:SKShapeNode {
         self.movementSpeed = self.movementSpeed + speedRandomizer
     }
     
-    func addMovement() {
-        self.dy = -(self.radius * 2)
-        var duration = self.movementSpeed
-        
+    // MARK: Physics Contact Functions
+    
+    func didBeginContactWall() {
+        if (Enhancements.sideStepping.rawValue & self.enhancements > Enhancements.none.rawValue) {
+            self.invertHorizontalMovement()
+        }
+    }
+    
+    // MARK: Movement Functions
+    
+    func startMovement() {
         if (Enhancements.movementSpeed.rawValue & self.enhancements > Enhancements.none.rawValue) {
-            duration /= 2
+            self.movementSpeedModifier *= 2
         }
         
         if (Enhancements.sideStepping.rawValue & self.enhancements > Enhancements.none.rawValue) {
@@ -91,29 +113,71 @@ class Monster:SKShapeNode {
             
             self.dx = self.dy * CGFloat(cos(rotation))
             self.dy = self.dy * CGFloat(sin(rotation))
-            duration /= 2
+            self.movementSpeedModifier *= 2
         }
         
-        let action = SKAction.moveBy(CGVector(dx:self.dx, dy:self.dy), duration:duration)
+        if (Enhancements.sideStepping2.rawValue & self.enhancements > Enhancements.none.rawValue) {
+            self.sideStepping2()
+        }
         
-        self.runAction(SKAction.repeatActionForever(action))
+        self.updateMovement()
     }
     
-    func onContactWall() {
-        if (Enhancements.sideStepping.rawValue & self.enhancements > Enhancements.none.rawValue) {
-            self.removeAllActions()
+    func updateMovement() {
+        let action = SKAction.moveBy(CGVector(dx:self.dx, dy:self.dy), duration:(self.movementSpeed / self.movementSpeedModifier))
+        
+        self.removeActionForKey(self.movementActionKey)
+        self.runAction(SKAction.repeatActionForever(action), withKey:self.movementActionKey)
+    }
+    
+    func stopMovement() {
+        self.removeActionForKey(self.movementActionKey)
+        
+        self.movementTimer.invalidate()
+    }
+    
+    func invertHorizontalMovement() {
+        self.dx *= -1
+        
+        self.updateMovement()
+        
+        if (Enhancements.sideStepping2.rawValue & self.enhancements > Enhancements.none.rawValue) {
+            self.movementTimer.invalidate()
             
-            var duration = self.movementSpeed
-            
-            if (Enhancements.movementSpeed.rawValue & self.enhancements > Enhancements.none.rawValue) {
-                duration /= 2
-            }
-            
-            duration /= 2
-            
-            let action = SKAction.moveBy(CGVector(dx:(self.dx * -1), dy:self.dy), duration:duration)
-            
-            self.runAction(SKAction.repeatActionForever(action))
+            self.sideStepping2()
         }
+    }
+    
+    func sideStepping2(timer: NSTimer = NSTimer()) {
+        let randomNumber = Double(arc4random_uniform(UInt32(101))) / 100
+        let randomizer = (1.0 / 2) - (1.0 * randomNumber)
+        
+        self.movementTimer = NSTimer.scheduledTimerWithTimeInterval((1.0 + randomizer), target:self, selector:"sideStepping2:", userInfo:true, repeats:false)
+        
+        if (timer.userInfo == nil) {
+            return
+        }
+        
+        self.invertHorizontalMovement()
+    }
+    
+    // MARK: ...
+    
+    func takeDamage() -> Bool {
+        self.die()
+        
+        return true
+    }
+    
+    func die() {
+        self.fillColor = UIColor.blackColor()
+        
+        self.stopMovement()
+        
+        NSTimer.scheduledTimerWithTimeInterval(self.timeUntilBodyVanishes, target:self, selector:"vanishBody:", userInfo:nil, repeats:false)
+    }
+    
+    func vanishBody(timer: NSTimer) {
+        self.removeFromParent()
     }
 }
