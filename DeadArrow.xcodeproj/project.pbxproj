@@ -20,6 +20,7 @@
 		372D17411C2ED7AD008BD7F3 /* DeadArrowTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 372D17401C2ED7AD008BD7F3 /* DeadArrowTests.swift */; };
 		372D174C1C2ED7AD008BD7F3 /* DeadArrowUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 372D174B1C2ED7AD008BD7F3 /* DeadArrowUITests.swift */; };
 		37645DC31C39BB6100732E57 /* Monster.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37645DC21C39BB6100732E57 /* Monster.swift */; };
+		37645E031C40710600732E57 /* Arrow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37645E021C40710600732E57 /* Arrow.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -59,6 +60,7 @@
 		372D174B1C2ED7AD008BD7F3 /* DeadArrowUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeadArrowUITests.swift; sourceTree = "<group>"; };
 		372D174D1C2ED7AD008BD7F3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		37645DC21C39BB6100732E57 /* Monster.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Monster.swift; sourceTree = "<group>"; };
+		37645E021C40710600732E57 /* Arrow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Arrow.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -120,6 +122,7 @@
 				372D17341C2ED7AC008BD7F3 /* LaunchScreen.storyboard */,
 				372D17371C2ED7AC008BD7F3 /* Info.plist */,
 				370BC4E61C2F3C3B00E4F129 /* Bow.swift */,
+				37645E021C40710600732E57 /* Arrow.swift */,
 				37645DC21C39BB6100732E57 /* Monster.swift */,
 			);
 			path = DeadArrow;
@@ -281,6 +284,7 @@
 				370BC4E31C2EDC7500E4F129 /* GameScene2.swift in Sources */,
 				372D172E1C2ED7AC008BD7F3 /* GameViewController.swift in Sources */,
 				372D17281C2ED7AC008BD7F3 /* AppDelegate.swift in Sources */,
+				37645E031C40710600732E57 /* Arrow.swift in Sources */,
 				37645DC31C39BB6100732E57 /* Monster.swift in Sources */,
 				370BC4E71C2F3C3B00E4F129 /* Bow.swift in Sources */,
 			);

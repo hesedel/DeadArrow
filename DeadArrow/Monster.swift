@@ -122,7 +122,6 @@ class Monster:SKShapeNode {
             
             self.dx = self.dy * CGFloat(cos(rotation))
             self.dy = self.dy * CGFloat(sin(rotation))
-            self.movementSpeedModifier *= 2
         }
         
         if (Enhancements.sideStepping2.rawValue & self.enhancements > Enhancements.none.rawValue) {

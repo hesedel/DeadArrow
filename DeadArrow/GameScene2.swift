@@ -24,7 +24,6 @@ class GameScene2: SKScene, SKPhysicsContactDelegate {
     var bowDrawingZone = SKShapeNode()
     
     // timing
-    let arrowSpeed = 1.0 / 32
     let monsterSpawnDelay = 3.0
     var monsterSpawnTimer = NSTimer()
     
@@ -170,19 +169,13 @@ class GameScene2: SKScene, SKPhysicsContactDelegate {
                 return
             }
             
-            let arrow = SKShapeNode()
-            arrow.path = self.bow.arrow.path
+            let arrow = Arrow(path:self.bow.arrow.path!, zRotation:self.bow.zRotation, drawDistance:self.bow.drawDistance)
+        
             arrow.position = self.bow.position
-            arrow.zRotation = self.bow.zRotation
-            arrow.strokeColor = UIColor.blackColor()
-            arrow.physicsBody = SKPhysicsBody(edgeChainFromPath:arrow.path!)
+        
             arrow.physicsBody!.categoryBitMask = Categories.arrow.rawValue
             arrow.physicsBody!.collisionBitMask = Categories.none.rawValue
             arrow.physicsBody!.contactTestBitMask = Categories.field.rawValue | Categories.monster.rawValue
-            
-            let rotation = arrow.zRotation + CGFloat(M_PI_2)
-            let action = SKAction.moveBy(CGVector(dx:(self.bow.drawDistance * cos(rotation)), dy:(self.bow.drawDistance * sin(rotation))), duration:self.arrowSpeed)
-            arrow.runAction(SKAction.repeatActionForever(action))
             
             self.addChild(arrow)
             
@@ -234,13 +227,8 @@ class GameScene2: SKScene, SKPhysicsContactDelegate {
     
     func didBeginContactBetweenArrowAndMonster(nodeA: SKShapeNode, nodeB: SKShapeNode) {
         nodeA.physicsBody!.categoryBitMask = Categories.none.rawValue
-        nodeA.removeAllActions()
-        nodeA.removeFromParent()
-        nodeA.position = CGPoint(x:(nodeA.position.x - nodeB.position.x), y:(nodeA.position.y - nodeB.position.y))
         
-        nodeB.addChild(nodeA)
-        
-        if ((nodeB as! Monster).takeDamage()) {
+        if ((nodeA as! Arrow).didBeginContactMonster(nodeB as! Monster)) {
             nodeB.physicsBody!.categoryBitMask = Categories.none.rawValue
             
             self.killCount += 1
@@ -254,8 +242,7 @@ class GameScene2: SKScene, SKPhysicsContactDelegate {
     // MARK: Physics Contact Functions - End
     
     func didEndContactBetweenArrowAndField(nodeA: SKShapeNode, nodeB: SKShapeNode) {
-        nodeA.removeAllActions()
-        nodeA.removeFromParent()
+        (nodeA as! Arrow).didEndContactField()
     }
     
     func didEndContactBetweenMonsterAndField(nodeA: SKShapeNode, nodeB: SKShapeNode) {
