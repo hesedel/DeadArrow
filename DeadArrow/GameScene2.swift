@@ -230,7 +230,7 @@ class GameScene2: SKScene, SKPhysicsContactDelegate {
     // MARK: Physics Contact Functions - Begin
     
     func didBeginContactBetweenArrowAndWall(nodeA: SKShapeNode, nodeB: SKShapeNode) {
-        (nodeA as! Arrow).didBeginContactWall()
+        (nodeA as! Arrow).didBeginContactWall(nodeB)
     }
     
     func didBeginContactBetweenArrowAndMonster(nodeA: SKShapeNode, nodeB: SKShapeNode) {

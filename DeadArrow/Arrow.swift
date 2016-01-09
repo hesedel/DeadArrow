@@ -22,10 +22,16 @@ class Arrow:SKShapeNode {
     var terminationTimer = NSTimer()
     
     // enhancements
-    var ricochet = 0
-    var pierce = 0
-    var multiple = 0
-    var multiple2 = 0
+    class Enhancements {
+        var ricochet = 3
+        var pierce = 0
+        var multiple = 0
+        var multiple2 = 0
+    }
+    var enhancements = Enhancements()
+    
+    // ...
+    var wallPrevious = SKShapeNode()
     
     override init() {
         super.init()
@@ -55,24 +61,31 @@ class Arrow:SKShapeNode {
     
     // MARK: Physics Contact Functions
     
-    func didBeginContactWall() {
-        //self.terminationTimer.invalidate()
-        // TODO: CONTINUE
+    func didBeginContactWall(wall: SKShapeNode) {
+        if (self.enhancements.ricochet == 0 || wall == self.wallPrevious) {
+            return
+        }
+        
+        self.terminationTimer.invalidate()
+        
         self.invertHorizontalMovement()
+            
+        self.enhancements.ricochet -= 1
+        self.wallPrevious = wall
     }
     
     func didBeginContactMonster(monster: Monster) -> Bool {
-        if (monster.takeDamage()) {
-            self.terminate()
-            
-            self.position = CGPoint(x:(self.position.x - monster.position.x), y:(self.position.y - monster.position.y))
-            
-            monster.addChild(self)
-            
-            return true
+        if (!monster.takeDamage()) {
+            return false
         }
         
-        return false
+        self.terminate()
+        
+        self.position = CGPoint(x:(self.position.x - monster.position.x), y:(self.position.y - monster.position.y))
+        
+        monster.addChild(self)
+        
+        return true
     }
     
     func didEndContactField() {
