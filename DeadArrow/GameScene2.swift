@@ -56,14 +56,8 @@ class GameScene2: SKScene, SKPhysicsContactDelegate {
         
         // create nodes
         self.field = SKShapeNode(rect:CGRect(origin:CGPoint(x:-(self.width / 2), y:0.0), size:CGSize(width:self.width, height:self.width)))
-        self.reusablePath = CGPathCreateMutable()
-        CGPathMoveToPoint(self.reusablePath, nil, -(self.width / 2), self.width)
-        CGPathAddLineToPoint(self.reusablePath, nil, -(self.width / 2), 0.0)
-        self.wallLeft.path = self.reusablePath
-        self.reusablePath = CGPathCreateMutable()
-        CGPathMoveToPoint(self.reusablePath, nil, (self.width / 2), self.width)
-        CGPathAddLineToPoint(self.reusablePath, nil, (self.width / 2), 0.0)
-        self.wallRight.path = self.reusablePath
+        self.wallLeft = SKShapeNode(rect:CGRect(origin:CGPoint(x:-((self.width / 2) + 1.0), y:self.field.position.y), size:CGSize(width:2.0, height:self.width)))
+        self.wallRight = SKShapeNode(rect:CGRect(origin:CGPoint(x:((self.width / 2) - 1.0), y:self.field.position.y), size:CGSize(width:2.0, height:self.width)))
         self.bow = Bow(baseUnit:self.baseUnit)
         self.bowDrawingZone = SKShapeNode(rect:CGRect(origin:CGPoint(x:-self.bow.width_2, y:-self.bow.height), size:CGSize(width:self.bow.width, height:self.bow.height)))
         
@@ -80,8 +74,10 @@ class GameScene2: SKScene, SKPhysicsContactDelegate {
         // set nodes' styles
         self.field.fillColor = UIColor.whiteColor()
         self.field.lineWidth = 0.0
-        self.wallLeft.strokeColor = UIColor.blackColor()
-        self.wallRight.strokeColor = UIColor.blackColor()
+        self.wallLeft.fillColor = UIColor.blackColor()
+        self.wallLeft.lineWidth = 0.0
+        self.wallRight.fillColor = UIColor.blackColor()
+        self.wallRight.lineWidth = 0.0
         self.bowDrawingZone.lineWidth = 0.0
         
         // set nodes' physics bodies
@@ -89,10 +85,12 @@ class GameScene2: SKScene, SKPhysicsContactDelegate {
         self.field.physicsBody!.affectedByGravity = false
         self.field.physicsBody!.categoryBitMask = Categories.field.rawValue
         self.field.physicsBody!.collisionBitMask = Categories.none.rawValue
-        self.wallLeft.physicsBody = SKPhysicsBody(edgeChainFromPath:self.wallLeft.path!)
+        self.wallLeft.physicsBody = SKPhysicsBody(polygonFromPath:self.wallLeft.path!)
+        self.wallLeft.physicsBody!.affectedByGravity = false
         self.wallLeft.physicsBody!.categoryBitMask = Categories.wall.rawValue
         self.wallLeft.physicsBody!.collisionBitMask = Categories.none.rawValue
-        self.wallRight.physicsBody = SKPhysicsBody(edgeChainFromPath:self.wallRight.path!)
+        self.wallRight.physicsBody = SKPhysicsBody(polygonFromPath:self.wallRight.path!)
+        self.wallRight.physicsBody!.affectedByGravity = false
         self.wallRight.physicsBody!.categoryBitMask = Categories.wall.rawValue
         self.wallRight.physicsBody!.collisionBitMask = Categories.none.rawValue
         
@@ -171,11 +169,11 @@ class GameScene2: SKScene, SKPhysicsContactDelegate {
             
             let arrow = Arrow(path:self.bow.arrow.path!, zRotation:self.bow.zRotation, drawDistance:self.bow.drawDistance)
         
-            arrow.position = self.bow.position
+            arrow.position = CGPoint(x:(self.bow.position.x - (self.bow.arrow.position.y * atan(self.bow.zRotation))) , y:(self.bow.position.y + (self.bow.arrow.position.y * cos(self.bow.zRotation))))
         
             arrow.physicsBody!.categoryBitMask = Categories.arrow.rawValue
             arrow.physicsBody!.collisionBitMask = Categories.none.rawValue
-            arrow.physicsBody!.contactTestBitMask = Categories.field.rawValue | Categories.monster.rawValue
+            arrow.physicsBody!.contactTestBitMask = Categories.field.rawValue | Categories.wall.rawValue | Categories.monster.rawValue
             
             self.addChild(arrow)
             
@@ -196,6 +194,12 @@ class GameScene2: SKScene, SKPhysicsContactDelegate {
     func didBeginContact(contact: SKPhysicsContact) {
         let nodeA = contact.bodyA.node as! SKShapeNode
         let nodeB = contact.bodyB.node as! SKShapeNode
+        
+        if (nodeA.physicsBody!.categoryBitMask == Categories.arrow.rawValue && nodeB.physicsBody!.categoryBitMask == Categories.wall.rawValue) {
+            self.didBeginContactBetweenArrowAndWall(nodeA, nodeB:nodeB)
+            
+            return
+        }
         
         if (nodeA.physicsBody!.categoryBitMask == Categories.arrow.rawValue && nodeB.physicsBody!.categoryBitMask == Categories.monster.rawValue) {
             self.didBeginContactBetweenArrowAndMonster(nodeA, nodeB:nodeB)
@@ -224,6 +228,10 @@ class GameScene2: SKScene, SKPhysicsContactDelegate {
     }
     
     // MARK: Physics Contact Functions - Begin
+    
+    func didBeginContactBetweenArrowAndWall(nodeA: SKShapeNode, nodeB: SKShapeNode) {
+        (nodeA as! Arrow).didBeginContactWall()
+    }
     
     func didBeginContactBetweenArrowAndMonster(nodeA: SKShapeNode, nodeB: SKShapeNode) {
         nodeA.physicsBody!.categoryBitMask = Categories.none.rawValue

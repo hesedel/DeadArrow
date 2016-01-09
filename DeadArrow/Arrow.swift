@@ -19,6 +19,7 @@ class Arrow:SKShapeNode {
     
     // ...
     let timeUntilArrowVanishes = 3.0
+    var terminationTimer = NSTimer()
     
     // enhancements
     var ricochet = 0
@@ -54,11 +55,15 @@ class Arrow:SKShapeNode {
     
     // MARK: Physics Contact Functions
     
+    func didBeginContactWall() {
+        //self.terminationTimer.invalidate()
+        // TODO: CONTINUE
+        self.invertHorizontalMovement()
+    }
+    
     func didBeginContactMonster(monster: Monster) -> Bool {
         if (monster.takeDamage()) {
-            self.stopMovement()
-            
-            self.removeFromParent()
+            self.terminate()
             
             self.position = CGPoint(x:(self.position.x - monster.position.x), y:(self.position.y - monster.position.y))
             
@@ -71,9 +76,7 @@ class Arrow:SKShapeNode {
     }
     
     func didEndContactField() {
-        self.stopMovement()
-        
-        self.removeFromParent()
+        self.terminationTimer = NSTimer.scheduledTimerWithTimeInterval(self.timeUntilArrowVanishes, target:self, selector:"terminate", userInfo:nil, repeats:false)
     }
     
     // MARK: Movement Functions
@@ -83,12 +86,30 @@ class Arrow:SKShapeNode {
     }
     
     func updateMovement() {
+        let actionRotation = SKAction.rotateToAngle(self.zRotation, duration:0.0)
         let action = SKAction.moveBy(CGVector(dx:self.dx, dy:self.dy), duration:self.movementSpeed)
         
+        self.runAction(actionRotation)
+        self.removeActionForKey(self.movementActionKey)
         self.runAction(SKAction.repeatActionForever(action), withKey:self.movementActionKey)
     }
     
     func stopMovement() {
         self.removeActionForKey(self.movementActionKey)
+    }
+    
+    func invertHorizontalMovement() {
+        self.dx *= -1
+        self.zRotation *= -1
+        
+        self.updateMovement()
+    }
+    
+    // MARK: ...
+    
+    func terminate() {
+        self.stopMovement()
+        
+        self.removeFromParent()
     }
 }

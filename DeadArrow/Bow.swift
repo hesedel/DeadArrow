@@ -45,8 +45,8 @@ class Bow:SKShapeNode {
         
         // create nodes
         self.reusablePath = CGPathCreateMutable()
-        CGPathMoveToPoint(self.reusablePath, nil, 0, self.maxDrawDistance)
-        CGPathAddLineToPoint(self.reusablePath, nil, 0.0, -self.height)
+        CGPathMoveToPoint(self.reusablePath, nil, 0.0, 0.0)
+        CGPathAddLineToPoint(self.reusablePath, nil, 0.0, -(self.height + self.maxDrawDistance))
         self.arrow.path = self.reusablePath
         self.anchor = SKShapeNode(circleOfRadius:self.lineWidth)
         self.left = SKShapeNode(circleOfRadius:self.lineWidth)
@@ -98,7 +98,7 @@ class Bow:SKShapeNode {
         
         self.arrow.hidden = self.drawDistance == 0.0
         
-        self.arrow.position.y = -self.drawDistance
+        self.arrow.position.y = (self.height + self.maxDrawDistance) - (self.height + self.drawDistance)
         
         self.reusablePath = CGPathCreateMutable()
         CGPathMoveToPoint(self.reusablePath, nil, -newWidth_2, -newHeight)
