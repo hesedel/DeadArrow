@@ -234,12 +234,22 @@ class GameScene2: SKScene, SKPhysicsContactDelegate {
     }
     
     func didBeginContactBetweenArrowAndMonster(nodeA: SKShapeNode, nodeB: SKShapeNode) {
-        nodeA.physicsBody!.categoryBitMask = Categories.none.rawValue
+        let arrow = (nodeA as! Arrow)
         
-        if ((nodeA as! Arrow).didBeginContactMonster(nodeB as! Monster)) {
+        if (!arrow.didBeginContactMonster()) {
+            nodeA.physicsBody!.categoryBitMask = Categories.none.rawValue
+            
+            arrow.terminate()
+            
+            nodeA.position = CGPoint(x:(nodeA.position.x - nodeB.position.x), y:(nodeA.position.y - nodeB.position.y))
+            
+            nodeB.addChild(nodeA)
+        }
+        
+        if ((nodeB as! Monster).takeDamage()) {
             nodeB.physicsBody!.categoryBitMask = Categories.none.rawValue
             
-            self.killCount += 1
+            self.killCount++
         }
     }
     
@@ -344,7 +354,7 @@ class GameScene2: SKScene, SKPhysicsContactDelegate {
         
         self.addChild(monster)
         
-        self.monsterSpawnCount += 1
+        self.monsterSpawnCount++
         
         let spawnDelayOffset = timer.userInfo == nil ? 0.0 : timer.userInfo as! Double
         let randomNumber = Double(arc4random_uniform(UInt32(101))) / 100

@@ -23,7 +23,7 @@ class Arrow:SKShapeNode {
     
     // enhancements
     class Enhancements {
-        var ricochet = 3
+        var ricochet = 2
         var pierce = 0
         var multiple = 0
         var multiple2 = 0
@@ -70,22 +70,18 @@ class Arrow:SKShapeNode {
         
         self.invertHorizontalMovement()
             
-        self.enhancements.ricochet -= 1
+        self.enhancements.ricochet--
         self.wallPrevious = wall
     }
     
-    func didBeginContactMonster(monster: Monster) -> Bool {
-        if (!monster.takeDamage()) {
-            return false
+    func didBeginContactMonster() -> Bool {
+        if (self.enhancements.pierce > 0) {
+            self.enhancements.pierce--
+            
+            return true
         }
         
-        self.terminate()
-        
-        self.position = CGPoint(x:(self.position.x - monster.position.x), y:(self.position.y - monster.position.y))
-        
-        monster.addChild(self)
-        
-        return true
+        return false
     }
     
     func didEndContactField() {
