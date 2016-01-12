@@ -23,6 +23,11 @@ class GameScene2: SKScene, SKPhysicsContactDelegate {
     var bow = Bow()
     var bowDrawingZone = SKShapeNode()
     
+    // TODO: ...
+    var a = SKShapeNode()
+    var b = SKShapeNode()
+    var c = SKShapeNode()
+    
     // timing
     let monsterSpawnDelay = 3.0
     var monsterSpawnTimer = NSTimer()
@@ -32,6 +37,7 @@ class GameScene2: SKScene, SKPhysicsContactDelegate {
     var hasGameStarted = false
     var monsterSpawnCount = 0
     var killCount = 0
+    var arrowEnhancements = [0, 0, 0]
     
     override func didMoveToView(view: SKView) {
         /* Setup your scene here */
@@ -51,9 +57,6 @@ class GameScene2: SKScene, SKPhysicsContactDelegate {
         self.wallRight = SKShapeNode(rect:CGRect(origin:CGPoint(x:((self.width / 2) - 1.0), y:self.field.position.y), size:CGSize(width:2.0, height:self.width)))
         self.bow = Bow(baseUnit:self.baseUnit)
         self.bowDrawingZone = SKShapeNode(rect:CGRect(origin:CGPoint(x:-self.bow.width_2, y:-self.bow.height), size:CGSize(width:self.bow.width, height:self.bow.height)))
-        
-        // set nodes' interaction
-        self.bowDrawingZone.userInteractionEnabled = true
         
         // set nodes' positions
         self.field.position = CGPoint(x:CGRectGetMidX(self.frame), y:(self.width * (1 / 3)))
@@ -92,6 +95,26 @@ class GameScene2: SKScene, SKPhysicsContactDelegate {
         self.addChild(self.wallRight)
         self.addChild(self.bowDrawingZone)
         self.addChild(self.bow)
+        
+        // TODO: ...
+        self.a = SKShapeNode(circleOfRadius:(self.baseUnit / 3))
+        self.b = SKShapeNode(circleOfRadius:(self.baseUnit / 3))
+        self.c = SKShapeNode(circleOfRadius:(self.baseUnit / 3))
+        self.a.name = "a"
+        self.b.name = "b"
+        self.c.name = "c"
+        self.a.position = CGPoint(x:((self.bow.position.x - self.bow.width_2) * (1 / 3)), y:(self.bow.position.y - (self.baseUnit / 2)))
+        self.b.position = CGPoint(x:((self.bow.position.x - self.bow.width_2) * (2 / 3)), y:(self.bow.position.y - (self.baseUnit / 2)))
+        self.c.position = CGPoint(x:(self.bow.position.x + self.bow.width_2 + ((self.bow.position.x - self.bow.width_2) * (1 / 3))), y:(self.bow.position.y - (self.baseUnit / 2)))
+        self.a.fillColor = UIColor.blackColor()
+        self.b.fillColor = UIColor.blackColor()
+        self.c.fillColor = UIColor.blackColor()
+        self.a.lineWidth = 0.0
+        self.b.lineWidth = 0.0
+        self.c.lineWidth = 0.0
+        self.addChild(self.a)
+        self.addChild(self.b)
+        self.addChild(self.c)
     }
     
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
@@ -112,6 +135,22 @@ class GameScene2: SKScene, SKPhysicsContactDelegate {
             
             //self.addChild(sprite)
         //}
+        if let touch = touches.first {
+            if let name = self.nodeAtPoint(touch.locationInNode(self)).name {
+                switch name {
+                case "a":
+                    self.arrowEnhancements = [1, 0, 0]
+                    break
+                case "b":
+                    self.arrowEnhancements = [0, 1, 0]
+                    break
+                case "c":
+                    self.arrowEnhancements = [0, 0, 1]
+                    break
+                default: break
+                }
+            }
+        }
     }
     
     override func touchesMoved(touches: Set<UITouch>, withEvent event: UIEvent?) {
@@ -159,7 +198,7 @@ class GameScene2: SKScene, SKPhysicsContactDelegate {
             }
         
             let position = CGPoint(x:(self.bow.position.x - (self.bow.arrow.position.y * atan(self.bow.zRotation))) , y:(self.bow.position.y + (self.bow.arrow.position.y * cos(self.bow.zRotation))))
-            let arrow = Arrow(path:self.bow.arrow.path!, zRotation:self.bow.zRotation, drawDistance:self.bow.drawDistance, enhancements:[1, 0, 1], parent:self, position:position)
+            let arrow = Arrow(path:self.bow.arrow.path!, zRotation:self.bow.zRotation, drawDistance:self.bow.drawDistance, enhancements:self.arrowEnhancements, parent:self, position:position)
         
             self.addChild(arrow)
         
@@ -168,6 +207,8 @@ class GameScene2: SKScene, SKPhysicsContactDelegate {
             self.bowDrawingZone.zRotation = self.bow.zRotation
             
             self.fingerHasCrossedBowDrawingZone = false
+        
+            self.arrowEnhancements = [0, 0, 0]
         //}
     }
    
