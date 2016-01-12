@@ -57,20 +57,33 @@ class Arrow:SKShapeNode {
         self.physicsBody!.contactTestBitMask = PhysicsCategories.field.rawValue | PhysicsCategories.wall.rawValue | PhysicsCategories.monster.rawValue
         
         let rotation = self.zRotation + CGFloat(M_PI_2)
+        
         self.dx = drawDistance * cos(rotation)
         self.dy = drawDistance * sin(rotation)
         
         self.startMovement()
         
-        for _ in 0..<self.enhancements.multiple {
-            // TODO: finish
-            let angle = CGFloat(M_PI_2 / 12)
-            let left = self.zRotation + angle
-            let x = self.position.x
-            let y = self.position.y
-            let arrow = Arrow(path:self.path!, zRotation:left, drawDistance:drawDistance, enhancements:[0, 0, 0], parent:parent, position:CGPoint(x:x ,y:y))
+        let height = CGPathGetBoundingBox(self.path).height
+        
+        for index in 0..<self.enhancements.multiple {
+            let angle = CGFloat(M_PI_2 / 32) * CGFloat(index + 1)
+            let rotationLeft = self.zRotation + angle
+            let rotationRight = self.zRotation - angle
+            var x:CGFloat = 0.0
+            var y:CGFloat = 0.0
             
-            parent.addChild(arrow)
+            x = self.position.x - (height * cos(rotation)) - (height * sin(rotationLeft))
+            y = self.position.y - (height * sin(rotation)) + (height * cos(rotationLeft))
+            
+            let arrowLeft = Arrow(path:self.path!, zRotation:rotationLeft, drawDistance:drawDistance, enhancements:[self.enhancements.ricochet, self.enhancements.pierce, 0], parent:parent, position:CGPoint(x:x, y:y))
+            
+            x = self.position.x - (height * cos(rotation)) - (height * sin(rotationRight))
+            y = self.position.y - (height * sin(rotation)) + (height * cos(rotationRight))
+            
+            let arrowRight = Arrow(path:self.path!, zRotation:rotationRight, drawDistance:drawDistance, enhancements:[self.enhancements.ricochet, self.enhancements.pierce, 0], parent:parent, position:CGPoint(x:x, y:y))
+            
+            parent.addChild(arrowLeft)
+            parent.addChild(arrowRight)
         }
     }
     

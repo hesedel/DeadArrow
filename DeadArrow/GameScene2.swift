@@ -149,24 +149,6 @@ class GameScene2: SKScene, SKPhysicsContactDelegate {
             self.bow.drawBow(drawDistance)
             
             self.startGame()
-            
-            // TODO: TEST
-            self.enumerateChildNodesWithName("test", usingBlock:{
-                (node, stop) in
-                node.removeFromParent()
-            })
-            let angle = CGFloat(M_PI_2 / 12)
-            let left = self.bow.zRotation + angle
-            let adjusted = self.bow.zRotation + CGFloat(M_PI_2)
-            let drawD = (self.bow.drawDistance + self.bow.height)
-            let maxDrawD = (self.bow.maxDrawDistance + self.bow.height)
-            let x = self.bow.position.x - (drawD * cos(adjusted)) - (maxDrawD * sin(left))
-            let y = self.bow.position.y - (drawD * sin(adjusted)) + (maxDrawD * cos(left))
-            let arrow = Arrow(path:self.bow.arrow.path!, zRotation:left, drawDistance:self.bow.drawDistance, enhancements:[0, 0, 0], parent:self, position:CGPoint(x:x ,y:y))
-            arrow.addChild(SKShapeNode(circleOfRadius: 5.0))
-            arrow.name = "test"
-            arrow.stopMovement()
-            self.addChild(arrow)
         }
     }
     
