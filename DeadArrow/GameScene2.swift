@@ -33,15 +33,6 @@ class GameScene2: SKScene, SKPhysicsContactDelegate {
     var monsterSpawnCount = 0
     var killCount = 0
     
-    enum Categories:UInt32 {
-        case none    = 0b0000
-        case field   = 0b0001
-        case wall    = 0b0010
-        case arrow   = 0b0100
-        case monster = 0b1000
-        case all     = 0b1111
-    }
-    
     override func didMoveToView(view: SKView) {
         /* Setup your scene here */
         //let myLabel = SKLabelNode(fontNamed:"Chalkduster")
@@ -83,16 +74,16 @@ class GameScene2: SKScene, SKPhysicsContactDelegate {
         // set nodes' physics bodies
         self.field.physicsBody = SKPhysicsBody(polygonFromPath:self.field.path!)
         self.field.physicsBody!.affectedByGravity = false
-        self.field.physicsBody!.categoryBitMask = Categories.field.rawValue
-        self.field.physicsBody!.collisionBitMask = Categories.none.rawValue
+        self.field.physicsBody!.categoryBitMask = PhysicsCategories.field.rawValue
+        self.field.physicsBody!.collisionBitMask = PhysicsCategories.none.rawValue
         self.wallLeft.physicsBody = SKPhysicsBody(polygonFromPath:self.wallLeft.path!)
         self.wallLeft.physicsBody!.affectedByGravity = false
-        self.wallLeft.physicsBody!.categoryBitMask = Categories.wall.rawValue
-        self.wallLeft.physicsBody!.collisionBitMask = Categories.none.rawValue
+        self.wallLeft.physicsBody!.categoryBitMask = PhysicsCategories.wall.rawValue
+        self.wallLeft.physicsBody!.collisionBitMask = PhysicsCategories.none.rawValue
         self.wallRight.physicsBody = SKPhysicsBody(polygonFromPath:self.wallRight.path!)
         self.wallRight.physicsBody!.affectedByGravity = false
-        self.wallRight.physicsBody!.categoryBitMask = Categories.wall.rawValue
-        self.wallRight.physicsBody!.collisionBitMask = Categories.none.rawValue
+        self.wallRight.physicsBody!.categoryBitMask = PhysicsCategories.wall.rawValue
+        self.wallRight.physicsBody!.collisionBitMask = PhysicsCategories.none.rawValue
         
         // add nodes to self
         //self.addChild(myLabel)
@@ -158,6 +149,24 @@ class GameScene2: SKScene, SKPhysicsContactDelegate {
             self.bow.drawBow(drawDistance)
             
             self.startGame()
+            
+            // TODO: TEST
+            self.enumerateChildNodesWithName("test", usingBlock:{
+                (node, stop) in
+                node.removeFromParent()
+            })
+            let angle = CGFloat(M_PI_2 / 12)
+            let left = self.bow.zRotation + angle
+            let adjusted = self.bow.zRotation + CGFloat(M_PI_2)
+            let drawD = (self.bow.drawDistance + self.bow.height)
+            let maxDrawD = (self.bow.maxDrawDistance + self.bow.height)
+            let x = self.bow.position.x - (drawD * cos(adjusted)) - (maxDrawD * sin(left))
+            let y = self.bow.position.y - (drawD * sin(adjusted)) + (maxDrawD * cos(left))
+            let arrow = Arrow(path:self.bow.arrow.path!, zRotation:left, drawDistance:self.bow.drawDistance, enhancements:[0, 0, 0], parent:self, position:CGPoint(x:x ,y:y))
+            arrow.addChild(SKShapeNode(circleOfRadius: 5.0))
+            arrow.name = "test"
+            arrow.stopMovement()
+            self.addChild(arrow)
         }
     }
     
@@ -166,17 +175,12 @@ class GameScene2: SKScene, SKPhysicsContactDelegate {
             if (self.bow.drawDistance == 0.0) {
                 return
             }
-            
-            let arrow = Arrow(path:self.bow.arrow.path!, zRotation:self.bow.zRotation, drawDistance:self.bow.drawDistance)
         
-            arrow.position = CGPoint(x:(self.bow.position.x - (self.bow.arrow.position.y * atan(self.bow.zRotation))) , y:(self.bow.position.y + (self.bow.arrow.position.y * cos(self.bow.zRotation))))
+            let position = CGPoint(x:(self.bow.position.x - (self.bow.arrow.position.y * atan(self.bow.zRotation))) , y:(self.bow.position.y + (self.bow.arrow.position.y * cos(self.bow.zRotation))))
+            let arrow = Arrow(path:self.bow.arrow.path!, zRotation:self.bow.zRotation, drawDistance:self.bow.drawDistance, enhancements:[1, 0, 1], parent:self, position:position)
         
-            arrow.physicsBody!.categoryBitMask = Categories.arrow.rawValue
-            arrow.physicsBody!.collisionBitMask = Categories.none.rawValue
-            arrow.physicsBody!.contactTestBitMask = Categories.field.rawValue | Categories.wall.rawValue | Categories.monster.rawValue
-            
             self.addChild(arrow)
-            
+        
             self.bow.drawBow()
             
             self.bowDrawingZone.zRotation = self.bow.zRotation
@@ -195,19 +199,19 @@ class GameScene2: SKScene, SKPhysicsContactDelegate {
         let nodeA = contact.bodyA.node as! SKShapeNode
         let nodeB = contact.bodyB.node as! SKShapeNode
         
-        if (nodeA.physicsBody!.categoryBitMask == Categories.arrow.rawValue && nodeB.physicsBody!.categoryBitMask == Categories.wall.rawValue) {
+        if (nodeA.physicsBody!.categoryBitMask == PhysicsCategories.arrow.rawValue && nodeB.physicsBody!.categoryBitMask == PhysicsCategories.wall.rawValue) {
             self.didBeginContactBetweenArrowAndWall(nodeA, nodeB:nodeB)
             
             return
         }
         
-        if (nodeA.physicsBody!.categoryBitMask == Categories.arrow.rawValue && nodeB.physicsBody!.categoryBitMask == Categories.monster.rawValue) {
+        if (nodeA.physicsBody!.categoryBitMask == PhysicsCategories.arrow.rawValue && nodeB.physicsBody!.categoryBitMask == PhysicsCategories.monster.rawValue) {
             self.didBeginContactBetweenArrowAndMonster(nodeA, nodeB:nodeB)
             
             return
         }
         
-        if (nodeA.physicsBody!.categoryBitMask == Categories.wall.rawValue && nodeB.physicsBody!.categoryBitMask == Categories.monster.rawValue) {
+        if (nodeA.physicsBody!.categoryBitMask == PhysicsCategories.wall.rawValue && nodeB.physicsBody!.categoryBitMask == PhysicsCategories.monster.rawValue) {
             self.didBeginContactBetweenMonsterAndWall(nodeA, nodeB:nodeB)
         }
     }
@@ -216,13 +220,13 @@ class GameScene2: SKScene, SKPhysicsContactDelegate {
         let nodeA = contact.bodyA.node as! SKShapeNode
         let nodeB = contact.bodyB.node as! SKShapeNode
         
-        if (nodeA.physicsBody!.categoryBitMask == Categories.arrow.rawValue && nodeB.physicsBody!.categoryBitMask == Categories.field.rawValue) {
+        if (nodeA.physicsBody!.categoryBitMask == PhysicsCategories.arrow.rawValue && nodeB.physicsBody!.categoryBitMask == PhysicsCategories.field.rawValue) {
             self.didEndContactBetweenArrowAndField(nodeA, nodeB:nodeB)
             
             return
         }
         
-        if (nodeA.physicsBody!.categoryBitMask == Categories.field.rawValue && nodeB.physicsBody!.categoryBitMask == Categories.monster.rawValue) {
+        if (nodeA.physicsBody!.categoryBitMask == PhysicsCategories.field.rawValue && nodeB.physicsBody!.categoryBitMask == PhysicsCategories.monster.rawValue) {
             self.didEndContactBetweenMonsterAndField(nodeA, nodeB:nodeB)
         }
     }
@@ -237,18 +241,12 @@ class GameScene2: SKScene, SKPhysicsContactDelegate {
         let arrow = (nodeA as! Arrow)
         
         if (!arrow.didBeginContactMonster()) {
-            nodeA.physicsBody!.categoryBitMask = Categories.none.rawValue
-            
-            arrow.terminate()
-            
             nodeA.position = CGPoint(x:(nodeA.position.x - nodeB.position.x), y:(nodeA.position.y - nodeB.position.y))
             
             nodeB.addChild(nodeA)
         }
         
         if ((nodeB as! Monster).takeDamage()) {
-            nodeB.physicsBody!.categoryBitMask = Categories.none.rawValue
-            
             self.killCount++
         }
     }
@@ -347,10 +345,6 @@ class GameScene2: SKScene, SKPhysicsContactDelegate {
         monster.name = "monster"
         
         monster.position = CGPoint(x:(monster.radius + CGFloat(arc4random_uniform(UInt32(self.width - (monster.radius * 2))))), y:(CGRectGetMaxY(self.field.frame) + monster.radius))
-        
-        monster.physicsBody!.categoryBitMask = Categories.monster.rawValue
-        monster.physicsBody!.collisionBitMask = Categories.none.rawValue
-        monster.physicsBody!.contactTestBitMask = Categories.field.rawValue | Categories.wall.rawValue
         
         self.addChild(monster)
         

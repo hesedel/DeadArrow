@@ -23,10 +23,9 @@ class Arrow:SKShapeNode {
     
     // enhancements
     class Enhancements {
-        var ricochet = 2
+        var ricochet = 0
         var pierce = 0
         var multiple = 0
-        var multiple2 = 0
     }
     var enhancements = Enhancements()
     
@@ -37,22 +36,42 @@ class Arrow:SKShapeNode {
         super.init()
     }
     
-    convenience init(path: CGPath, zRotation: CGFloat, drawDistance: CGFloat) {
+    convenience init(path: CGPath, zRotation: CGFloat, drawDistance: CGFloat, enhancements: [Int] = [0, 0, 0], parent: SKScene, position: CGPoint) {
         self.init()
         
+        self.enhancements.ricochet = enhancements[0]
+        self.enhancements.pierce = enhancements[1]
+        self.enhancements.multiple = enhancements[2]
+        
         self.path = path
+        
+        self.position = position
         
         self.zRotation = zRotation
         
         self.strokeColor = UIColor.blackColor()
         
         self.physicsBody = SKPhysicsBody(edgeChainFromPath:self.path!)
+        self.physicsBody!.categoryBitMask = PhysicsCategories.arrow.rawValue
+        self.physicsBody!.collisionBitMask = PhysicsCategories.none.rawValue
+        self.physicsBody!.contactTestBitMask = PhysicsCategories.field.rawValue | PhysicsCategories.wall.rawValue | PhysicsCategories.monster.rawValue
         
         let rotation = self.zRotation + CGFloat(M_PI_2)
         self.dx = drawDistance * cos(rotation)
         self.dy = drawDistance * sin(rotation)
         
         self.startMovement()
+        
+        for _ in 0..<self.enhancements.multiple {
+            // TODO: finish
+            let angle = CGFloat(M_PI_2 / 12)
+            let left = self.zRotation + angle
+            let x = self.position.x
+            let y = self.position.y
+            let arrow = Arrow(path:self.path!, zRotation:left, drawDistance:drawDistance, enhancements:[0, 0, 0], parent:parent, position:CGPoint(x:x ,y:y))
+            
+            parent.addChild(arrow)
+        }
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -80,6 +99,10 @@ class Arrow:SKShapeNode {
             
             return true
         }
+        
+        self.physicsBody!.categoryBitMask = PhysicsCategories.none.rawValue
+        
+        self.terminate()
         
         return false
     }

@@ -71,6 +71,9 @@ class Monster:SKShapeNode {
         // set nodes' physics bodies
         self.physicsBody = SKPhysicsBody(circleOfRadius:(self.radius * (2 / 3)))
         self.physicsBody!.affectedByGravity = false
+        self.physicsBody!.categoryBitMask = PhysicsCategories.monster.rawValue
+        self.physicsBody!.collisionBitMask = PhysicsCategories.none.rawValue
+        self.physicsBody!.contactTestBitMask = PhysicsCategories.field.rawValue | PhysicsCategories.wall.rawValue
         
         // add nodes to self
         self.addChild(image)
@@ -173,6 +176,8 @@ class Monster:SKShapeNode {
     
     func takeDamage() -> Bool {
         self.die()
+        
+        self.physicsBody!.categoryBitMask = PhysicsCategories.none.rawValue
         
         return true
     }
