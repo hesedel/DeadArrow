@@ -94,7 +94,7 @@ class Arrow:SKShapeNode {
     // MARK: Physics Contact Functions
     
     func didBeginContactWall(wall: SKShapeNode) {
-        if (self.enhancements.ricochet == 0 || wall == self.wallPrevious) {
+        if self.enhancements.ricochet == 0 || wall == self.wallPrevious {
             return
         }
         
@@ -102,13 +102,13 @@ class Arrow:SKShapeNode {
         
         self.invertHorizontalMovement()
             
-        self.enhancements.ricochet--
+        self.enhancements.ricochet -= 1
         self.wallPrevious = wall
     }
     
     func didBeginContactMonster() -> Bool {
-        if (self.enhancements.pierce > 0) {
-            self.enhancements.pierce--
+        if self.enhancements.pierce > 0 {
+            self.enhancements.pierce -= 1
             
             return true
         }

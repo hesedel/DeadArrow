@@ -52,7 +52,7 @@ class Monster:SKShapeNode {
         
         self.dy = -(self.radius * 2)
         
-        if (randomizeRadiusAndMovementSpeed) {
+        if randomizeRadiusAndMovementSpeed {
             self.randomizeRadius()
         }
         
@@ -78,7 +78,7 @@ class Monster:SKShapeNode {
         // add nodes to self
         self.addChild(image)
         
-        if (randomizeRadiusAndMovementSpeed) {
+        if randomizeRadiusAndMovementSpeed {
             self.randomizeMovementSpeed()
         }
         
@@ -108,7 +108,7 @@ class Monster:SKShapeNode {
     // MARK: Physics Contact Functions
     
     func didBeginContactWall() {
-        if (Enhancements.sideStepping.rawValue & self.enhancements > Enhancements.none.rawValue) {
+        if Enhancements.sideStepping.rawValue & self.enhancements > Enhancements.none.rawValue {
             self.invertHorizontalMovement()
         }
     }
@@ -116,18 +116,18 @@ class Monster:SKShapeNode {
     // MARK: Movement Functions
     
     func startMovement() {
-        if (Enhancements.movementSpeed.rawValue & self.enhancements > Enhancements.none.rawValue) {
+        if Enhancements.movementSpeed.rawValue & self.enhancements > Enhancements.none.rawValue {
             self.movementSpeedModifier *= 2
         }
         
-        if (Enhancements.sideStepping.rawValue & self.enhancements > Enhancements.none.rawValue) {
+        if Enhancements.sideStepping.rawValue & self.enhancements > Enhancements.none.rawValue {
             let rotation = arc4random_uniform(UInt32(2)) == 0 ? M_PI - M_PI_4 : M_PI_4
             
             self.dx = self.dy * CGFloat(cos(rotation))
             self.dy = self.dy * CGFloat(sin(rotation))
         }
         
-        if (Enhancements.sideStepping2.rawValue & self.enhancements > Enhancements.none.rawValue) {
+        if Enhancements.sideStepping2.rawValue & self.enhancements > Enhancements.none.rawValue {
             self.sideStepping2()
         }
         
@@ -152,7 +152,7 @@ class Monster:SKShapeNode {
         
         self.updateMovement()
         
-        if (Enhancements.sideStepping2.rawValue & self.enhancements > Enhancements.none.rawValue) {
+        if Enhancements.sideStepping2.rawValue & self.enhancements > Enhancements.none.rawValue {
             self.movementTimer.invalidate()
             
             self.sideStepping2()
@@ -165,7 +165,7 @@ class Monster:SKShapeNode {
         
         self.movementTimer = NSTimer.scheduledTimerWithTimeInterval((1.0 + randomizer), target:self, selector:"sideStepping2:", userInfo:true, repeats:false)
         
-        if (timer.userInfo == nil) {
+        if timer.userInfo == nil {
             return
         }
         
